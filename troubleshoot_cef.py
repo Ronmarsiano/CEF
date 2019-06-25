@@ -9,7 +9,7 @@ rsyslog_security_config_omsagent_conf_content_tokens = ["local4.|*.", "debug|*",
 syslog_ng_security_config_omsagent_conf_content_tokens = ["f_local4_oms", "facility(local4)", "tcp(\"127.0.0.1\"", "port(25226)", "filter(f_local4_oms)", "destination(security_oms)"]
 oms_agent_configuration_content_tokens = [daemon_port, "127.0.0.1"]
 oms_agent_process_name = "opt/microsoft/omsagent"
-syslog_log_dir = "/var/log/syslog"
+syslog_log_dir = ["/var/log/syslog","/var/log/messages"]
 udp = False
 tcp = False
 
@@ -76,7 +76,7 @@ def restart_red_hat_firewall_d():
 
 def rsyslog_get_cef_log_counter():
     print("Validating the CEF logs are received and are in the correct format when received by syslog daemon")
-    tac = subprocess.Popen(["sudo", "tac", syslog_log_dir], stdout=subprocess.PIPE)
+    tac = subprocess.Popen(["sudo", "tac", syslog_log_dir[0]], stdout=subprocess.PIPE)
     grep = subprocess.Popen(["grep", "CEF"], stdin=tac.stdout, stdout=subprocess.PIPE)
     count_lines = subprocess.Popen(["wc", "-l"], stdin=grep.stdout, stdout=subprocess.PIPE)
     o, e = count_lines.communicate()
@@ -84,18 +84,27 @@ def rsyslog_get_cef_log_counter():
     if e is None:
         print("Located " + output[:-1] + " CEF messages")
         return int(output)
-    else:
-        print_error("Error: could not find CEF logs.")
-        print_notice("Notice: execute \"sudo tac /var/log/syslog | grep CEF -m 10\" manually.")
+    elif "No such file or directory" in output:
+        print("Validating the CEF logs are received and are in the correct format when received by syslog daemon")
+        tac = subprocess.Popen(["sudo", "tac", syslog_log_dir[1]], stdout=subprocess.PIPE)
+        grep = subprocess.Popen(["grep", "CEF"], stdin=tac.stdout, stdout=subprocess.PIPE)
+        count_lines = subprocess.Popen(["wc", "-l"], stdin=grep.stdout, stdout=subprocess.PIPE)
+        o, e = count_lines.communicate()
+        output = o.decode('ascii')
+        if e is None:
+            print("Located " + output[:-1] + " CEF messages")
+            return int(output)
+    print_error("Error: could not find CEF logs.")
+    print_notice("Notice: execute \"sudo tac /var/log/syslog | grep CEF -m 10\" manually.")
     return 0
 
 
 def rsyslog_cef_logs_received_in_correct_format():
     print("Fetching CEF messages from daemon files.")
-    print("Taking 2 snapshots in 3 seconds diff and compering the amount of CEF messages.")
+    print("Taking 2 snapshots in 5 seconds diff and compering the amount of CEF messages.")
     print("If found increasing CEF messages daemon is receiving CEF messages.")
     start_amount = rsyslog_get_cef_log_counter()
-    time.sleep(3)
+    time.sleep(5)
     end_amount = rsyslog_get_cef_log_counter()
     if end_amount > start_amount:
         print_ok("Ok: received CEF messages by the daemon")
@@ -340,7 +349,9 @@ def handle_syslog_ng(workspace_id):
             netstat_open_port("0.0.0.0:" + daemon_port, "Ok: daemon incoming port " + daemon_port + " is open", "Error: daemon incoming port is not open, please check that the process is up and running and the port is configured correctly.")
             netstat_open_port(agent_port , "Ok: omsagent is listening to incoming port " + agent_port, "Error: agent is not listening to incoming port " + agent_port + " please check that the process is up and running and the port is configured correctly.[Use netstat -an | grep [daemon port] to validate the connection or re-run ths script]")
             print("Validating CEF into syslog-ng daemon")
+            time.sleep(1)
             incoming_logs_validations(daemon_port, "Ok - received CEF message in daemon incoming port.["+daemon_port+"]")
+            time.sleep(1)
         else:
             print_error("Error: syslog-ng daemon configuration was found invalid.")
             print_notice("Notice: please make sure:")
@@ -358,14 +369,14 @@ def check_rsyslog_configuration():
             if "imudp" in line or "DPServerRun" in line:
                 if "#" in line:
                     udp = False
-                    print_error("Error: udp communication is not enabled to the daemon.")
+                    print_warning("Warning: udp communication is not enabled to the daemon.")
                 else:
                     udp = True
             # second part is for red hat [InputTCPServerRun]
             if "imtcp" in line or "InputTCPServerRun" in line:
                 if "#" in line:
                     tcp = False
-                    print_error("Error: tcp communication is not enabled to the daemon.")
+                    print_warning("Warning: tcp communication is not enabled to the daemon.")
                 else:
                     tcp = True
         return udp or tcp
