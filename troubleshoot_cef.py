@@ -125,9 +125,11 @@ def incoming_logs_validations(incoming_port, ok_message):
 
 def netstat_open_port(in_port,ok_message, error_message):
     netstat = subprocess.Popen(["sudo", "netstat", "-an"], stdout=subprocess.PIPE)
+    print("In port grep: " + in_port)
     grep = subprocess.Popen(["grep", in_port], stdin=netstat.stdout, stdout=subprocess.PIPE)
     o, e = grep.communicate()
     output = o.decode('ascii')
+    print(output)
     if e is None and in_port in output:
         print_ok(ok_message)
         return True
@@ -336,7 +338,7 @@ def handle_syslog_ng(workspace_id):
             restart_daemon("syslog-ng")
             restart_omsagent(workspace_id)
             netstat_open_port("0.0.0.0:" + daemon_port, "Ok: daemon incoming port " + daemon_port + " is open", "Error: daemon incoming port is not open, please check that the process is up and running and the port is configured correctly.")
-            netstat_open_port("127.0.0.1:" + agent_port, "Ok: omsagent is listening to incoming port " + agent_port, "Error: agent is not listening to incoming port " + agent_port + " please check that the process is up and running and the port is configured correctly.")
+            netstat_open_port(agent_port , "Ok: omsagent is listening to incoming port " + agent_port, "Error: agent is not listening to incoming port " + agent_port + " please check that the process is up and running and the port is configured correctly.[Use netstat -an | grep [daemon port] to validate the connection or re-run ths script]")
             print("Validating CEF into syslog-ng daemon")
             incoming_logs_validations(daemon_port, "Ok - received CEF message in daemon incoming port.["+daemon_port+"]")
         else:
@@ -387,9 +389,9 @@ def handle_rsyslog(workspace_id):
         restart_daemon("rsyslog")
         restart_omsagent(workspace_id)
         netstat_open_port("0.0.0.0:" + daemon_port, "Ok: daemon incoming port " + daemon_port + " is open",
-                         "Error: daemon incoming port is not open, please check that the process is up and running and the port is configured correctly.")
-        netstat_open_port("127.0.0.1:" + agent_port, "Ok: omsagent is listening to incoming port " + agent_port,
-                         "Error: agent is not listening to incoming port " + agent_port + " please check that the process is up and running and the port is configured correctly.")
+                         "Error: daemon incoming port is not open, please check that the process is up and running and the port is configured correctly.\nAction: enable ports in \'/etc/rsyslog.conf\' file which contains daemon incoming ports.")
+        netstat_open_port(agent_port , "Ok: omsagent is listening to incoming port " + agent_port,
+                         "Error: agent is not listening to incoming port " + agent_port + " please check that the process is up and running and the port is configured correctly.[Use netstat -an | grep [daemon port] to validate the connection or re-run ths script]")
         print("Validating CEF into rsyslog daemon - port " + daemon_port)
         time.sleep(1)
         incoming_logs_validations(daemon_port, "Ok - received CEF message in daemon incoming port.["+daemon_port+"]")
