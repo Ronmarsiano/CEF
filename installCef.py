@@ -124,7 +124,7 @@ def check_oms_agent_and_install(workspace_id, primary_key, secondary_key):
     '''
     if not check_oms_agent_status():
         print("Downloading and installing omsagent")
-        download_install_oms_agent(workspace_id, primary_key, secondary_key)
+    download_install_oms_agent(workspace_id, primary_key, secondary_key)
 
 
 def check_oms_agent_status():

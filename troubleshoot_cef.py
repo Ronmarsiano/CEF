@@ -66,7 +66,7 @@ def red_hat_firewall_d_exception_for_omsagent():
 
 def restart_red_hat_firewall_d():
     restart = subprocess.Popen(["sudo", "firewall-cmd", "--reload"], stdout=subprocess.PIPE)
-    o, e =restart.communicate()
+    o, e = restart.communicate()
     time.sleep(2)
     if e is not None:
         print_error("Error: could not get /etc/firewalld/zones/public.xml file holding firewall exceptions.")
@@ -95,7 +95,7 @@ def rsyslog_get_cef_log_counter():
             print("Located " + output[:-1] + " CEF messages")
             return int(output)
     print_error("Error: could not find CEF logs.")
-    print_notice("Notice: execute \"sudo tac /var/log/syslog | grep CEF -m 10\" manually.")
+    print_notice("Notice: execute \"sudo tac /var/log/syslog or /var/log/messages | grep CEF -m 10\" manually.")
     return 0
 
 
