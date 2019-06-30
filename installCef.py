@@ -5,6 +5,8 @@ import os
 import sys
 import subprocess
 
+#Deprecated !!!!!!!!!!!!!!!!!!!!!!!!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 
 # workspace id + primary key + secondary key can be taken from the CEF configuration page in the sentinel page
 # in azure portal
