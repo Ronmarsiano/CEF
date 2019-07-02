@@ -128,6 +128,15 @@ def create_rsyslog_daemon_forwarding_configuration(facility_restrictions, omsage
 
 
 def set_omsagent_configuration(workspace_id, omsagent_incoming_port, tcp, udp):
+    '''
+    Download the omsagent configuration and then change the omsagent incoming port
+    if required and change the protocol if required
+    :param workspace_id:
+    :param omsagent_incoming_port:
+    :param tcp:
+    :param udp:
+    :return:
+    '''
     configuration_path = "/etc/opt/microsoft/omsagent/" + workspace_id + "/conf/omsagent.d/security_events.conf"
     print("Creating omsagent configuration to listen to syslog daemon forwarding port - " + omsagent_incoming_port)
     print("Configuration location is - " + configuration_path)
@@ -149,10 +158,22 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port, tcp, udp):
             print_ok("Incoming port for omsagent was changed to " + omsagent_incoming_port)
         else:
             print_error("Could not change omsagent incoming port")
-    change_omsagent_protocol(tcp=tcp, udp=udp, configuration_path=configuration_path)
+    if change_omsagent_protocol(tcp=tcp, udp=udp, configuration_path=configuration_path):
+        print_ok("Finished changing omsagent configuration")
+        return True
+    else:
+        print_error("Could not change the omsagent configuration")
+        return False
 
 
 def change_omsagent_protocol(tcp, udp, configuration_path):
+    '''
+    Changing the omsagent protocol, since the protocol type is set on the omsagent
+    configuration file
+    :param tcp:
+    :param udp:
+    :param configuration_path:
+    '''
     with open(configuration_path, "rt") as fin:
         with open("tmp.txt", "wt") as fout:
             for line in fin:
@@ -188,6 +209,11 @@ def change_omsagent_protocol(tcp, udp, configuration_path):
 
 
 def change_omsagent_configuration_port(omsagent_incoming_port, configuration_path):
+    '''
+    Changing the omsagent configuration port if required
+    :param omsagent_incoming_port:
+    :param configuration_path:
+    '''
     with open(configuration_path, "rt") as fin:
         with open("tmp.txt", "wt") as fout:
             for line in fin:
@@ -206,6 +232,9 @@ def change_omsagent_configuration_port(omsagent_incoming_port, configuration_pat
 
 
 def restart_rsyslog():
+    '''
+    Restart the resyslog daemon
+    '''
     print("Restarting rsyslog daemon.")
     command_tokens = ["sudo", "service", "rsyslog", "restart"]
     print_notice(" ".join(command_tokens))
@@ -222,6 +251,10 @@ def restart_rsyslog():
 
 
 def restart_omsagent(workspace_id):
+    '''
+    Restart the omsagent
+    :param workspace_id:
+    '''
     print("Trying to restart omsagent")
     command_tokens = ["sudo", "/opt/microsoft/omsagent/bin/service_control", "restart", workspace_id]
     print_notice(" ".join(command_tokens))
@@ -244,6 +277,13 @@ def is_rsyslog():
     # Meaning ps -ef | grep "daemon name" has returned more then the grep result
     return process_check(rsyslog_daemon_name) > 1
 
+
+def is_syslogng():
+    '''
+    Returns True if the daemon is 'Syslogng'
+    '''
+    # Meaning ps -ef | grep "daemon name" has returned more then the grep result
+    return process_check(syslogng_daemon_name) > 1
 
 def main():
     tcp = False
