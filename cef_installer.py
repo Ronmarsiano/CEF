@@ -1,15 +1,16 @@
 #! /usr/local/bin/python3
 import subprocess
 import time
-import sys, getopt
-import fileinput
+import sys
 
 rsyslog_daemon_name = "rsyslog"
-syslogng_daemon_name = "syslog-ng"
+syslog_ng_daemon_name = "syslog-ng"
 oms_agent_file_name = "onboard_agent.sh"
 oms_agent_url = "https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/" + oms_agent_file_name
 help_text = "Optional arguments for the python script are:\n\t-T: for TCP\n\t-U: for UDP which is the default value.\n\t-F: for no facility restrictions.\n\t-p: for changing default port from 25226"
 omsagent_default_incoming_port = "25226"
+rsyslog_daemon_configuration_path = "/etc/rsyslog.d/security-config-omsagent.conf"
+syslog_ng_daemon_configuration_path = "/etc/syslog-ng/conf.d/security-config-omsagent.conf"
 
 
 def print_error(input_str):
@@ -55,7 +56,7 @@ def print_command_response(input_str):
 def download_omsagent():
     '''
     Download omsagent this downloaded file would be installed
-    :return: True if downloaded sccessfully
+    :return: True if downloaded successfully
     '''
     print("Trying to download the omsagent.")
     print_notice("wget " + oms_agent_url)
@@ -78,6 +79,7 @@ def install_omsagent(workspace_id, primary_key):
     :param primary_key:
     :return:
     '''
+    print("Installing omsagent")
     command_tokens = ["sh", oms_agent_file_name, "-w", workspace_id, "-s", primary_key, "-d", "opinsights.azure.com"]
     print_notice(" ".join(command_tokens))
     install_omsagent_command = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
@@ -106,28 +108,36 @@ def process_check(process_name):
     return tokens
 
 
-def create_rsyslog_daemon_forwarding_configuration(facility_restrictions, omsagent_incoming_port):
-    print("Creating rsyslog daemon configuration.")
+def create_daemon_forwarding_configuration(omsagent_incoming_port, daemon_configuration_path, daemon_name):
+    '''
+    Create the daemon configuration to forward messages over TCP to the
+    oms agent
+    :param omsagent_incoming_port: port for communication between the omsagent the the daemon
+    :param daemon_configuration_path: path of the configuration file
+    :param daemon_name: name of the daemon
+    :return:
+    '''
+    print("Creating " + daemon_name + " daemon configuration.")
     print("Configuration is changed to forward daemon incoming syslog messages into the omsagent.")
-    time.sleep(3)
-    if facility_restrictions:
-        command_tokens = ["sudo", "bash", "-c", "printf 'local4.debug @127.0.0.1:" + omsagent_incoming_port + "' > /etc/rsyslog.d/security-config-omsagent.conf"]
-        print_notice("Writing configuration - "+" ".join(command_tokens))
-    else:
-        command_tokens = ["sudo", "bash", "-c", "printf '*.* @127.0.0.1:" + omsagent_incoming_port + "' > /etc/rsyslog.d/security-config-omsagent.conf"]
-        print_notice("Writing configuration with no facility restrictions - " + " ".join(command_tokens))
+    print("Every command containing \'CEF\' string will be forwarded.")
+    print("Path:")
+    print_notice(daemon_configuration_path)
+    file_content = get_daemon_configuration_content(daemon_name, omsagent_incoming_port)
+    command_tokens = ["sudo", "bash", "-c", "printf '" + file_content + "' > " + daemon_configuration_path]
+    print_notice("Writing configuration - "+" ".join(command_tokens))
     set_daemon_configuration = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     o, e = set_daemon_configuration.communicate()
+    time.sleep(3)
     if e is not None:
         error_output = e.decode('ascii')
-        print_error("Error: could not change daemon configuration.")
+        print_error("Could not change " + daemon_name + " daemon configuration.")
         print_error(error_output)
         return False
-    print_ok("Configuration for rsyslog daemon was changed successfully..")
+    print_ok("Configuration for " + daemon_name + " daemon was changed successfully.")
     return True
 
 
-def set_omsagent_configuration(workspace_id, omsagent_incoming_port, tcp, udp):
+def set_omsagent_configuration(workspace_id, omsagent_incoming_port):
     '''
     Download the omsagent configuration and then change the omsagent incoming port
     if required and change the protocol if required
@@ -158,7 +168,7 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port, tcp, udp):
             print_ok("Incoming port for omsagent was changed to " + omsagent_incoming_port)
         else:
             print_error("Could not change omsagent incoming port")
-    if change_omsagent_protocol(tcp=tcp, udp=udp, configuration_path=configuration_path):
+    if change_omsagent_protocol(configuration_path=configuration_path):
         print_ok("Finished changing omsagent configuration")
         return True
     else:
@@ -166,32 +176,18 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port, tcp, udp):
         return False
 
 
-def change_omsagent_protocol(tcp, udp, configuration_path):
+def change_omsagent_protocol(configuration_path):
     '''
     Changing the omsagent protocol, since the protocol type is set on the omsagent
     configuration file
-    :param tcp:
-    :param udp:
     :param configuration_path:
     '''
     with open(configuration_path, "rt") as fin:
         with open("tmp.txt", "wt") as fout:
             for line in fin:
-                if "protocol_type" in line and tcp is True and "tcp" not in line:
+                if "protocol_type" in line and "udp" in line:
                     fout.write(line.replace("udp", "tcp"))
                     print_notice("Changing protocol type from udp to tcp in "+configuration_path)
-                    print("Line changed: " + line)
-                elif "protocol_type" in line and udp is True and "udp" not in line:
-                    fout.write(line.replace("tcp", "udp"))
-                    print_notice("Changing protocol type from tcp to udp in " + configuration_path)
-                    print("Line changed: " + line)
-                elif "bind" in line and tcp is True and "0.0.0.0" not in line:
-                    fout.write(line.replace("127.0.0.1", "0.0.0.0"))
-                    print_notice("Changing bind property for tcp protocol in " + configuration_path)
-                    print("Line changed: " + line)
-                elif "bind" in line and udp is True and "127.0.0.1" not in line:
-                    fout.write(line.replace("0.0.0.0", "127.0.0.1"))
-                    print_notice("Changing bind property for udp protocol in " + configuration_path)
                     print("Line changed: " + line)
                 else:
                     fout.write(line)
@@ -233,7 +229,7 @@ def change_omsagent_configuration_port(omsagent_incoming_port, configuration_pat
 
 def restart_rsyslog():
     '''
-    Restart the resyslog daemon
+    Restart the Rsyslog daemon
     '''
     print("Restarting rsyslog daemon.")
     command_tokens = ["sudo", "service", "rsyslog", "restart"]
@@ -243,10 +239,29 @@ def restart_rsyslog():
     o, e = restart_rsyslog_command.communicate()
     if e is not None:
         error_output = e.decode('ascii')
-        print_error("Error: could not restart rsyslog daemon")
+        print_error("Could not restart rsyslog daemon")
         print_error(error_output)
         return False
     print_ok("Rsyslog daemon restarted successfully")
+    return True
+
+
+def restart_syslog_ng():
+    '''
+    Restart the syslog-ng daemon
+    '''
+    print("Restarting syslog-ng daemon.")
+    command_tokens = ["sudo", "service", "syslog-ng", "restart"]
+    print_notice(" ".join(command_tokens))
+    restart_rsyslog_command = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
+    time.sleep(3)
+    o, e = restart_rsyslog_command.communicate()
+    if e is not None:
+        error_output = e.decode('ascii')
+        print_error("Could not restart syslog-ng daemon")
+        print_error(error_output)
+        return False
+    print_ok("Syslog-ng daemon restarted successfully")
     return True
 
 
@@ -270,6 +285,40 @@ def restart_omsagent(workspace_id):
     return True
 
 
+def get_daemon_configuration_content(daemon_name, omsagent_incoming_port):
+    '''
+    Return the correct configuration according to the daemon name
+    :param daemon_name:
+    :param omsagent_incoming_port:
+    :return:
+    '''
+    if daemon_name is rsyslog_daemon_name:
+        return get_rsyslog_daemon_configuration_content(omsagent_incoming_port)
+    elif daemon_name is syslog_ng_daemon_name:
+        return get_syslog_ng_damon_configuration_content(omsagent_incoming_port)
+    else:
+        print_error("Could not create daemon configuration.")
+        return False
+
+
+def get_rsyslog_daemon_configuration_content(omsagent_incoming_port):
+    '''Rsyslog accept every message containing CEF'''
+    rsyslog_daemon_configuration_content = "msg, contains, \"CEF\"  ~\n*.* @@127.0.0.1:"
+    print("Rsyslog daemon configuration content:")
+    content = rsyslog_daemon_configuration_content + omsagent_incoming_port
+    print_command_response(content)
+    return content
+
+
+def get_syslog_ng_damon_configuration_content(omsagent_incoming_port):
+    part_1 = "filter f_oms_cef { match(\"CEF\" value(\"MESSAGE\"));};\ndestination security_oms { tcp(\"127.0.0.1\" port("
+    part_2 = "));};\nlog { source(s_src); filter(f_oms_cef); destination(security_oms); };"
+    content = part_1 + omsagent_incoming_port + part_2
+    print("Syslog-ng configuration for forwarding CEF messages to omsagent content is:")
+    print_command_response(content)
+    return content
+
+
 def is_rsyslog():
     '''
     Returns True if the daemon is 'Rsyslog'
@@ -283,13 +332,10 @@ def is_syslog_ng():
     Returns True if the daemon is 'Syslogng'
     '''
     # Meaning ps -ef | grep "daemon name" has returned more then the grep result
-    return process_check(syslogng_daemon_name) > 1
+    return process_check(syslog_ng_daemon_name) > 1
 
 
 def main():
-    tcp = False
-    udp = False
-    facility_restrictions = True
     omsagent_incoming_port = omsagent_default_incoming_port
     port_argument = False
     if len(sys.argv) < 3:
@@ -304,16 +350,7 @@ def main():
         print("Primary key: " + primary_key)
         if len(sys.argv) > 3:
             for index in range(3, len(sys.argv)):
-                if "-T" in sys.argv[index]:
-                    print_notice("Notice: selected communication protocol is TCP")
-                    tcp = True
-                elif "-U" in sys.argv[index]:
-                    print_notice("Notice: selected communication protocol is UDP")
-                    udp = True
-                elif "-F" in sys.argv[index]:
-                    print_notice("Notice: no facility restrictions")
-                    facility_restrictions = False
-                elif "-p" in sys.argv[index]:
+                if "-p" in sys.argv[index]:
                     port_argument = True
                 elif port_argument:
                     omsagent_incoming_port = sys.argv[index]
@@ -322,22 +359,22 @@ def main():
                 elif "-help" in sys.argv[index]:
                     print(help_text)
                     return
-    if udp is True and tcp is True:
-        print_error("Can not have both TCP and UDP on as communication protocol")
-        return
-    if udp is False and tcp is False:
-        udp = True
     if download_omsagent():
         install_omsagent(workspace_id=workspace_id, primary_key=primary_key)
+        set_omsagent_configuration(workspace_id=workspace_id, omsagent_incoming_port=omsagent_incoming_port)
     if is_rsyslog():
         print("Located rsyslog daemon running on the machine")
-        if create_rsyslog_daemon_forwarding_configuration(facility_restrictions=facility_restrictions, omsagent_incoming_port=omsagent_incoming_port) and \
-                set_omsagent_configuration(workspace_id=workspace_id, omsagent_incoming_port=omsagent_incoming_port, tcp=tcp, udp=udp):
-            restart_rsyslog()
-            restart_omsagent(workspace_id=workspace_id)
+        create_daemon_forwarding_configuration(omsagent_incoming_port=omsagent_incoming_port,
+                                               daemon_configuration_path=rsyslog_daemon_configuration_path,
+                                               daemon_name=rsyslog_daemon_name)
+        restart_rsyslog()
     elif is_syslog_ng():
         print("Located syslog-ng daemon running on the machine")
-
+        create_daemon_forwarding_configuration(omsagent_incoming_port=omsagent_incoming_port,
+                                               daemon_configuration_path=syslog_ng_daemon_configuration_path,
+                                               daemon_name=syslog_ng_daemon_name)
+        restart_syslog_ng()
+    restart_omsagent(workspace_id=workspace_id)
 
 
 main()
