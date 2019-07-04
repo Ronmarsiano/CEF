@@ -278,12 +278,13 @@ def is_rsyslog():
     return process_check(rsyslog_daemon_name) > 1
 
 
-def is_syslogng():
+def is_syslog_ng():
     '''
     Returns True if the daemon is 'Syslogng'
     '''
     # Meaning ps -ef | grep "daemon name" has returned more then the grep result
     return process_check(syslogng_daemon_name) > 1
+
 
 def main():
     tcp = False
@@ -334,6 +335,9 @@ def main():
                 set_omsagent_configuration(workspace_id=workspace_id, omsagent_incoming_port=omsagent_incoming_port, tcp=tcp, udp=udp):
             restart_rsyslog()
             restart_omsagent(workspace_id=workspace_id)
+    elif is_syslog_ng():
+        print("Located syslog-ng daemon running on the machine")
+
 
 
 main()
