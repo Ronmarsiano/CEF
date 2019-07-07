@@ -206,27 +206,33 @@ def set_rsyslog_configuration():
     with open(rsyslog_conf_path, "rt") as fin:
         with open("tmp.txt", "wt") as fout:
             for line in fin:
-                if "imudp" in line and "#" in line:
-                    fout.write(line.replace("#", ""))
-                    print_notice("Enabling udp module")
-                    print("Line changed: " + line)
-                    udp_enabled = True
-                elif "imtcp" in line and "#" in line:
-                    fout.write(line.replace("#", ""))
-                    print_notice("Enabling tcp module")
-                    print("Line changed: " + line)
-                    tcp_enabled = True
+                if "imudp" in line:
+                    if "#" in line:
+                        fout.write(line.replace("#", ""))
+                        print_notice("Enabling udp module")
+                        print("Line changed: " + line)
+                    if daemon_default_incoming_port in line:
+                        udp_enabled = True
+                elif "imtcp" in line:
+                    if "#" in line:
+                        fout.write(line.replace("#", ""))
+                        print_notice("Enabling tcp module")
+                        print("Line changed: " + line)
+                    if daemon_default_incoming_port in line:
+                        tcp_enabled = True
                 # For version 7 and below of rsyslog
                 elif "UDPServerRun" in line and daemon_default_incoming_port in line and daemon_default_incoming_port in line:
-                    fout.write(line.replace("#", ""))
-                    print_notice("Enabling udp module")
-                    print("Line changed: " + line)
+                    if "#" in line:
+                        fout.write(line.replace("#", ""))
+                        print_notice("Enabling udp module")
+                        print("Line changed: " + line)
                     udp_enabled = True
                 # For version 7 and below of rsyslog
                 elif "TCPServerRun" in line and daemon_default_incoming_port in line and daemon_default_incoming_port in line:
-                    fout.write(line.replace("#", ""))
-                    print_notice("Enabling tcp module")
-                    print("Line changed: " + line)
+                    if "#" in line:
+                        fout.write(line.replace("#", ""))
+                        print_notice("Enabling tcp module")
+                        print("Line changed: " + line)
                     tcp_enabled = True
                 else:
                     fout.write(line)
