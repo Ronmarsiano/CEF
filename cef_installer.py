@@ -188,7 +188,7 @@ def rsyslog_red_hat_mod_load_tcp(fout, line):
         return True
     elif "TCPServerRun" in line and daemon_default_incoming_port in line:
         if "#" in line:
-            fout.write(line)
+            fout.write(line.replace("#", ""))
         else:
             fout.write(line)
         return True
@@ -204,7 +204,7 @@ def rsyslog_red_hat_mod_load_udp(fout, line):
         return True
     elif "UDPServerRun" in line and daemon_default_incoming_port in line:
         if "#" in line:
-            fout.write(line)
+            fout.write(line.replace("#", ""))
         else:
             fout.write(line)
         return True
