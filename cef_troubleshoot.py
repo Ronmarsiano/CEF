@@ -9,7 +9,8 @@ rsyslog_security_config_omsagent_conf_content_tokens = ["local4.|*.", "debug|*",
 syslog_ng_security_config_omsagent_conf_content_tokens = ["f_local4_oms", "facility(local4)", "tcp(\"127.0.0.1\"", "port(25226)", "filter(f_local4_oms)", "destination(security_oms)"]
 oms_agent_configuration_content_tokens = [daemon_port, "127.0.0.1"]
 oms_agent_process_name = "opt/microsoft/omsagent"
-syslog_log_dir = ["/var/log/syslog","/var/log/messages"]
+syslog_log_dir = ["/var/log/syslog", "/var/log/messages"]
+firewall_d_exception_configuration_file = "/etc/firewalld/zones/public.xml"
 udp = False
 tcp = False
 
@@ -64,14 +65,25 @@ def check_red_hat_firewall_issue():
 
 
 def red_hat_firewall_d_exception_for_omsagent():
-    firewall_status = subprocess.Popen(["sudo", "cat", "/etc/firewalld/zones/public.xml"], stdout=subprocess.PIPE)
+    '''
+    Check that the firewall_d has an exception for the omsagent
+    :return:
+    '''
+    print("Checking for exception for omsagent")
+    print_notice(firewall_d_exception_configuration_file)
+    firewall_status = subprocess.Popen(["sudo", "cat", firewall_d_exception_configuration_file], stdout=subprocess.PIPE)
     o, e = firewall_status.communicate()
     if e is not None:
         print_error("Error: could not get /etc/firewalld/zones/public.xml file holding firewall exceptions")
+    print_command_response(o)
     return agent_port in o
 
 
 def restart_red_hat_firewall_d():
+    '''
+    Method for restarting the firewall_d
+    :return:
+    '''
     print("Trying to restart firewall_d")
     print_notice("sudo firewall-cmd --reload")
     restart = subprocess.Popen(["sudo", "firewall-cmd", "--reload"], stdout=subprocess.PIPE)
@@ -84,7 +96,13 @@ def restart_red_hat_firewall_d():
 
 
 def rsyslog_get_cef_log_counter():
+    '''
+    Count using tac and wc -l the amount of CEF messages arrived and see it is in increasing
+    count
+    :return:
+    '''
     print("Validating the CEF logs are received and are in the correct format when received by syslog daemon")
+    print_notice("sudo tac /var/log/syslog")
     tac = subprocess.Popen(["sudo", "tac", syslog_log_dir[0]], stdout=subprocess.PIPE)
     grep = subprocess.Popen(["grep", "CEF"], stdin=tac.stdout, stdout=subprocess.PIPE)
     count_lines = subprocess.Popen(["wc", "-l"], stdin=grep.stdout, stdout=subprocess.PIPE)
@@ -95,6 +113,7 @@ def rsyslog_get_cef_log_counter():
         return int(output)
     elif "No such file or directory" in output:
         print("Validating the CEF logs are received and are in the correct format when received by syslog daemon")
+        print_notice("sudo tac /var/log/messages")
         tac = subprocess.Popen(["sudo", "tac", syslog_log_dir[1]], stdout=subprocess.PIPE)
         grep = subprocess.Popen(["grep", "CEF"], stdin=tac.stdout, stdout=subprocess.PIPE)
         count_lines = subprocess.Popen(["wc", "-l"], stdin=grep.stdout, stdout=subprocess.PIPE)
@@ -352,29 +371,6 @@ def restart_omsagent(workspace_id):
         time.sleep(5)
 
 
-def handle_syslog_ng(workspace_id):
-    print("\tChecking syslog-ng:")
-    if test_daemon_configuration("syslog-ng"):
-        daemon_config_valid = validate_daemon_configuration_content("syslog-ng",
-                                                                    syslog_ng_security_config_omsagent_conf_content_tokens)
-        if daemon_config_valid:
-            print_ok("Syslog-ng daemon configuration was found valid.")
-            print("Trying to restart syslog daemon")
-            restart_daemon("syslog-ng")
-            restart_omsagent(workspace_id)
-            netstat_open_port("0.0.0.0:" + daemon_port, "Ok: daemon incoming port " + daemon_port + " is open", "Error: daemon incoming port is not open, please check that the process is up and running and the port is configured correctly.")
-            netstat_open_port(agent_port , "Ok: omsagent is listening to incoming port " + agent_port, "Error: agent is not listening to incoming port " + agent_port + " please check that the process is up and running and the port is configured correctly.[Use netstat -an | grep [daemon port] to validate the connection or re-run ths script]")
-            print("Validating CEF into syslog-ng daemon")
-            time.sleep(1)
-            incoming_logs_validations(daemon_port, "Ok - received CEF message in daemon incoming port.["+daemon_port+"]")
-            time.sleep(1)
-        else:
-            print_error("Error: syslog-ng daemon configuration was found invalid.")
-            print_notice("Notice: please make sure:")
-            print_notice("\t1. /etc/syslog-ng/security-config-omsagent.conf file exists")
-            print_notice("\t2. File contains the following content: \"filter f_local4_oms { facility(local4); };\n destination security_oms { tcp(\"127.0.0.1\" port(" + agent_port + ")); };\n log { source(src); filter(f_local4_oms); destination(security_oms); };\"")
-
-
 def check_rsyslog_configuration():
     if check_file_in_directory("rsyslog.conf", "/etc/"):
         content = open("/etc/rsyslog.conf").read()
@@ -396,6 +392,29 @@ def check_rsyslog_configuration():
                 else:
                     tcp = True
         return udp or tcp
+
+
+def handle_syslog_ng(workspace_id):
+    print("\tChecking syslog-ng:")
+    if test_daemon_configuration("syslog-ng"):
+        daemon_config_valid = validate_daemon_configuration_content("syslog-ng",
+                                                                    syslog_ng_security_config_omsagent_conf_content_tokens)
+        if daemon_config_valid:
+            print_ok("Syslog-ng daemon configuration was found valid.")
+            print("Trying to restart syslog daemon")
+            restart_daemon("syslog-ng")
+            restart_omsagent(workspace_id)
+            netstat_open_port("0.0.0.0:" + daemon_port, "Ok: daemon incoming port " + daemon_port + " is open", "Error: daemon incoming port is not open, please check that the process is up and running and the port is configured correctly.")
+            netstat_open_port(agent_port , "Ok: omsagent is listening to incoming port " + agent_port, "Error: agent is not listening to incoming port " + agent_port + " please check that the process is up and running and the port is configured correctly.[Use netstat -an | grep [daemon port] to validate the connection or re-run ths script]")
+            print("Validating CEF into syslog-ng daemon")
+            time.sleep(1)
+            incoming_logs_validations(daemon_port, "Ok - received CEF message in daemon incoming port.["+daemon_port+"]")
+            time.sleep(1)
+        else:
+            print_error("Error: syslog-ng daemon configuration was found invalid.")
+            print_notice("Notice: please make sure:")
+            print_notice("\t1. /etc/syslog-ng/security-config-omsagent.conf file exists")
+            print_notice("\t2. File contains the following content: \"filter f_local4_oms { facility(local4); };\n destination security_oms { tcp(\"127.0.0.1\" port(" + agent_port + ")); };\n log { source(src); filter(f_local4_oms); destination(security_oms); };\"")
 
 
 def handle_rsyslog(workspace_id):
