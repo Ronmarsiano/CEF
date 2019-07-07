@@ -178,7 +178,7 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port):
 
 
 def insert_to_file(file_path, string_to_append):
-    append_command = subprocess.Popen(["cat", string_to_append, ">>", file_path], stdout=subprocess.PIPE)
+    append_command = subprocess.Popen(["cat", "\"" + string_to_append + "\"", ">>", file_path], stdout=subprocess.PIPE)
     o, e = append_command.communicate()
     if e is not None:
         error_output = e.decode('ascii')
@@ -239,13 +239,14 @@ def set_rsyslog_configuration():
         print_error("Error: could not change omsagent configuration port in ." + rsyslog_conf_path)
         print_error(error_output)
         return False
-    print_ok("Omsagent configuration was changed to fit required protocol - " + rsyslog_conf_path)
+
     if not udp_enabled:
         insert_to_file(file_path=rsyslog_conf_path,
                        string_to_append="module(load=\"imudp\")\ninput(type=\"imudp\" port=\"" + daemon_default_incoming_port + "\")\n")
-    elif not tcp_enabled:
+    if not tcp_enabled:
         insert_to_file(file_path=rsyslog_conf_path,
                        string_to_append="module(load=\"imtcp\")\ninput(type=\"imtcp\" port=\"" + daemon_default_incoming_port + "\")\n")
+    print_ok("Omsagent configuration was changed to fit required protocol - " + rsyslog_conf_path)
 
 
 def change_omsagent_protocol(configuration_path):
