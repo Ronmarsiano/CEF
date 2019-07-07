@@ -194,7 +194,7 @@ def set_rsyslog_configuration():
         with open("tmp.txt", "wt") as fout:
             for line in fin:
                 if "imudp" in line:
-                    print_warning("Linse:----->     "+line)
+                    print_warning("lines :----->     "+line)
                     if "#" in line:
                         fout.write(line.replace("#", ""))
                     else:
