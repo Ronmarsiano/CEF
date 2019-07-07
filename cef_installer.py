@@ -247,9 +247,11 @@ def set_rsyslog_configuration():
         return False
 
     if not udp_enabled:
+        print_error("UPDATINNGGGGGGGGGGGGGGGGGGGGG")
         insert_to_file(file_path=rsyslog_conf_path,
                        string_to_append="module(load=\"imudp\")\ninput(type=\"imudp\" port=\"" + daemon_default_incoming_port + "\")\n")
     if not tcp_enabled:
+        print_error("UPDATINNGGGGGGGGGGGGGGGGGGGGG")
         insert_to_file(file_path=rsyslog_conf_path,
                        string_to_append="module(load=\"imtcp\")\ninput(type=\"imtcp\" port=\"" + daemon_default_incoming_port + "\")\n")
     print_ok("Omsagent configuration was changed to fit required protocol - " + rsyslog_conf_path)
