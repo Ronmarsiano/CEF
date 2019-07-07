@@ -13,8 +13,8 @@ daemon_default_incoming_port = "514"
 rsyslog_daemon_forwarding_configuration_path = "/etc/rsyslog.d/security-config-omsagent.conf"
 syslog_ng_daemon_forwarding_configuration_path = "/etc/syslog-ng/conf.d/security-config-omsagent.conf"
 rsyslog_conf_path = "/etc/rsyslog.conf"
-rsyslog_module_udp_content = "module(load=\"imudp\")\ninput(type=\"imudp\" port=\"" + daemon_default_incoming_port + "\")\n"
-rsyslog_module_tcp_content = "module(load=\"imtcp\")\ninput(type=\"imtcp\" port=\"" + daemon_default_incoming_port + "\")\n"
+rsyslog_module_udp_content = "# provides UDP syslog reception\nmodule(load=\"imudp\")\ninput(type=\"imudp\" port=\"" + daemon_default_incoming_port + "\")\n"
+rsyslog_module_tcp_content = "# provides TCP syslog reception\nmodule(load=\"imtcp\")\ninput(type=\"imtcp\" port=\"" + daemon_default_incoming_port + "\")\n"
 
 def print_error(input_str):
     '''
@@ -194,7 +194,6 @@ def set_rsyslog_configuration():
         with open("tmp.txt", "wt") as fout:
             for line in fin:
                 if "imudp" in line:
-                    print_warning("lines 123123123 :----->     "+line)
                     if "#" in line:
                         fout.write(line.replace("#", ""))
                     else:
@@ -387,47 +386,46 @@ def is_syslog_ng():
 
 
 def main():
-    set_rsyslog_configuration()
-    # omsagent_incoming_port = omsagent_default_incoming_port
-    # port_argument = False
-    # if len(sys.argv) < 3:
-    #     print_error("Error: The installation script is expecting 2 arguments:")
-    #     print_error("\t1) workspace id")
-    #     print_error("\t2) primary key")
-    #     return
-    # else:
-    #     workspace_id = sys.argv[1]
-    #     primary_key = sys.argv[2]
-    #     print("Workspace ID: " + workspace_id)
-    #     print("Primary key: " + primary_key)
-    #     if len(sys.argv) > 3:
-    #         for index in range(3, len(sys.argv)):
-    #             if "-p" in sys.argv[index]:
-    #                 port_argument = True
-    #             elif port_argument:
-    #                 omsagent_incoming_port = sys.argv[index]
-    #                 print_notice("Notice: omsagent incoming port was changed to " + sys.argv[index])
-    #                 port_argument = False
-    #             elif "-help" in sys.argv[index]:
-    #                 print(help_text)
-    #                 return
-    # if download_omsagent():
-    #     install_omsagent(workspace_id=workspace_id, primary_key=primary_key)
-    #     set_omsagent_configuration(workspace_id=workspace_id, omsagent_incoming_port=omsagent_incoming_port)
-    # if is_rsyslog():
-    #     print("Located rsyslog daemon running on the machine")
-    #     create_daemon_forwarding_configuration(omsagent_incoming_port=omsagent_incoming_port,
-    #                                            daemon_configuration_path=rsyslog_daemon_forwarding_configuration_path,
-    #                                            daemon_name=rsyslog_daemon_name)
-    #     set_rsyslog_configuration()
-    #     restart_rsyslog()
-    # elif is_syslog_ng():
-    #     print("Located syslog-ng daemon running on the machine")
-    #     create_daemon_forwarding_configuration(omsagent_incoming_port=omsagent_incoming_port,
-    #                                            daemon_configuration_path=syslog_ng_daemon_forwarding_configuration_path,
-    #                                            daemon_name=syslog_ng_daemon_name)
-    #     restart_syslog_ng()
-    # restart_omsagent(workspace_id=workspace_id)
+    omsagent_incoming_port = omsagent_default_incoming_port
+    port_argument = False
+    if len(sys.argv) < 3:
+        print_error("Error: The installation script is expecting 2 arguments:")
+        print_error("\t1) workspace id")
+        print_error("\t2) primary key")
+        return
+    else:
+        workspace_id = sys.argv[1]
+        primary_key = sys.argv[2]
+        print("Workspace ID: " + workspace_id)
+        print("Primary key: " + primary_key)
+        if len(sys.argv) > 3:
+            for index in range(3, len(sys.argv)):
+                if "-p" in sys.argv[index]:
+                    port_argument = True
+                elif port_argument:
+                    omsagent_incoming_port = sys.argv[index]
+                    print_notice("Notice: omsagent incoming port was changed to " + sys.argv[index])
+                    port_argument = False
+                elif "-help" in sys.argv[index]:
+                    print(help_text)
+                    return
+    if download_omsagent():
+        install_omsagent(workspace_id=workspace_id, primary_key=primary_key)
+        set_omsagent_configuration(workspace_id=workspace_id, omsagent_incoming_port=omsagent_incoming_port)
+    if is_rsyslog():
+        print("Located rsyslog daemon running on the machine")
+        create_daemon_forwarding_configuration(omsagent_incoming_port=omsagent_incoming_port,
+                                               daemon_configuration_path=rsyslog_daemon_forwarding_configuration_path,
+                                               daemon_name=rsyslog_daemon_name)
+        set_rsyslog_configuration()
+        restart_rsyslog()
+    elif is_syslog_ng():
+        print("Located syslog-ng daemon running on the machine")
+        create_daemon_forwarding_configuration(omsagent_incoming_port=omsagent_incoming_port,
+                                               daemon_configuration_path=syslog_ng_daemon_forwarding_configuration_path,
+                                               daemon_name=syslog_ng_daemon_name)
+        restart_syslog_ng()
+    restart_omsagent(workspace_id=workspace_id)
 
 
 main()
