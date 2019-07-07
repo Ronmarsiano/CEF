@@ -179,6 +179,38 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port):
         return False
 
 
+def rsyslog_red_hat_mod_load_tcp(fout, line):
+    if "ModLoad" in line and "imtcp" in line:
+        if "#" in line:
+            fout.write(line.replace("#", ""))
+        else:
+            fout.write(line)
+        return True
+    elif "TCPServerRun" in line and daemon_default_incoming_port in line:
+        if "#" in line:
+            fout.write(line)
+        else:
+            fout.write(line)
+        return True
+    return False
+
+
+def rsyslog_red_hat_mod_load_udp(fout, line):
+    if "ModLoad" in line and "imudp" in line:
+        if "#" in line:
+            fout.write(line.replace("#", ""))
+        else:
+            fout.write(line)
+        return True
+    elif "UDPServerRun" in line and daemon_default_incoming_port in line:
+        if "#" in line:
+            fout.write(line)
+        else:
+            fout.write(line)
+        return True
+    return False
+
+
 def set_rsyslog_configuration():
     '''
     Set the configuration for rsyslog
@@ -196,20 +228,24 @@ def set_rsyslog_configuration():
     with open(rsyslog_conf_path, "rt") as fin:
         with open("tmp.txt", "wt") as fout:
             for line in fin:
-                if "imudp" in line:
+                if "imudp" in line and ("module" in line or "input" in line):
                     if "#" in line:
                         fout.write(line.replace("#", ""))
                     else:
                         fout.write(line)
                     if daemon_default_incoming_port in line:
                         udp_enabled = True
-                elif "imtcp" in line:
+                elif "imtcp" in line and ("module" in line or "input" in line):
                     if "#" in line:
                         fout.write(line.replace("#", ""))
                     else:
                         fout.write(line)
                     if daemon_default_incoming_port in line:
                         tcp_enabled = True
+                elif rsyslog_red_hat_mod_load_tcp(fout, line):
+                    tcp_enabled = True
+                elif rsyslog_red_hat_mod_load_udp(fout, line):
+                    udp_enabled = True
                 else:
                     fout.write(line)
             if not udp_enabled:
