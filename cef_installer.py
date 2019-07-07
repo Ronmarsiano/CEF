@@ -188,6 +188,9 @@ def set_rsyslog_configuration():
     udp_enabled = False
     tcp_enabled = False
     print("Trying to change rsyslog configuration")
+    print_command_response("Content should contain:")
+    print_command_response(rsyslog_module_udp_content)
+    print_command_response(rsyslog_module_tcp_content)
     print_notice(rsyslog_conf_path)
     print_warning("Supported rsyslog version is \"7\" to rsyslog 8.1905.0")
     with open(rsyslog_conf_path, "rt") as fin:
