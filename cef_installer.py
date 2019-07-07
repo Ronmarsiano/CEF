@@ -210,10 +210,10 @@ def set_rsyslog_configuration():
                         tcp_enabled = True
                 else:
                     fout.write(line)
-    if not udp_enabled:
-        fout.write(rsyslog_module_udp_content)
-    if not tcp_enabled:
-        fout.write(rsyslog_module_tcp_content)
+            if not udp_enabled:
+                fout.write(rsyslog_module_udp_content)
+            if not tcp_enabled:
+                fout.write(rsyslog_module_tcp_content)
     command_tokens = ["sudo", "mv", "tmp.txt", rsyslog_conf_path]
     write_new_content = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     time.sleep(3)
