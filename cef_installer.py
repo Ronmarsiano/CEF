@@ -13,6 +13,8 @@ daemon_default_incoming_port = "514"
 rsyslog_daemon_forwarding_configuration_path = "/etc/rsyslog.d/security-config-omsagent.conf"
 syslog_ng_daemon_forwarding_configuration_path = "/etc/syslog-ng/conf.d/security-config-omsagent.conf"
 rsyslog_conf_path = "/etc/rsyslog.conf"
+rsyslog_module_udp_content = "module(load=\"imudp\")\ninput(type=\"imudp\" port=\"" + daemon_default_incoming_port + "\")\n"
+rsyslog_module_tcp_content = "module(load=\"imtcp\")\ninput(type=\"imtcp\" port=\"" + daemon_default_incoming_port + "\")\n"
 
 def print_error(input_str):
     '''
@@ -177,24 +179,6 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port):
         return False
 
 
-def insert_to_file(file_path, string_to_append):
-    command_tokens = ["sudo", "echo", "\"" + string_to_append + "\"", ">>", file_path]
-    print_notice(" ".join(command_tokens))
-
-    append_command = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
-    o, e = append_command.communicate()
-    if e is not None:
-        error_output = e.decode('ascii')
-        print_error("Error: could not append to file.")
-        print_error("File path:" + file_path)
-        print_error("Content to append: " + string_to_append)
-        print_error(error_output)
-        return False
-    else:
-        print_ok("Appended \"" + string_to_append + "\" to file: " + file_path)
-        return True
-
-
 def set_rsyslog_configuration():
     '''
     Set the configuration for rsyslog
@@ -226,6 +210,10 @@ def set_rsyslog_configuration():
                         tcp_enabled = True
                 else:
                     fout.write(line)
+    if not udp_enabled:
+        fout.write(rsyslog_module_udp_content)
+    if not tcp_enabled:
+        fout.write(rsyslog_module_tcp_content)
     command_tokens = ["sudo", "mv", "tmp.txt", rsyslog_conf_path]
     write_new_content = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     time.sleep(3)
@@ -235,15 +223,8 @@ def set_rsyslog_configuration():
         print_error("Error: could not change omsagent configuration port in ." + rsyslog_conf_path)
         print_error(error_output)
         return False
-    if not udp_enabled:
-        print_error("UPDATINNGGGGGGGGGGGGGGGGGGGGG123")
-        insert_to_file(file_path=rsyslog_conf_path,
-                       string_to_append="module(load=\"imudp\")\ninput(type=\"imudp\" port=\"" + daemon_default_incoming_port + "\")\n")
-    if not tcp_enabled:
-        print_error("UPDATINNGGGGGGGGGGGGGGGGGGGGG123  ")
-        insert_to_file(file_path=rsyslog_conf_path,
-                       string_to_append="module(load=\"imtcp\")\ninput(type=\"imtcp\" port=\"" + daemon_default_incoming_port + "\")\n")
     print_ok("Omsagent configuration was changed to fit required protocol - " + rsyslog_conf_path)
+    return True
 
 
 def change_omsagent_protocol(configuration_path):
