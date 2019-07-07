@@ -9,9 +9,10 @@ oms_agent_file_name = "onboard_agent.sh"
 oms_agent_url = "https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/" + oms_agent_file_name
 help_text = "Optional arguments for the python script are:\n\t-T: for TCP\n\t-U: for UDP which is the default value.\n\t-F: for no facility restrictions.\n\t-p: for changing default port from 25226"
 omsagent_default_incoming_port = "25226"
-rsyslog_daemon_configuration_path = "/etc/rsyslog.d/security-config-omsagent.conf"
-syslog_ng_daemon_configuration_path = "/etc/syslog-ng/conf.d/security-config-omsagent.conf"
-
+daemon_default_incoming_port = "514"
+rsyslog_daemon_forwarding_configuration_path = "/etc/rsyslog.d/security-config-omsagent.conf"
+syslog_ng_daemon_forwarding_configuration_path = "/etc/syslog-ng/conf.d/security-config-omsagent.conf"
+rsyslog_conf_path = "/etc/rsyslog.conf"
 
 def print_error(input_str):
     '''
@@ -174,6 +175,67 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port):
     else:
         print_error("Could not change the omsagent configuration")
         return False
+
+
+def insert_to_file(file_path, string_to_append):
+    append_command = subprocess.Popen(["cat", string_to_append, ">>", file_path], stdout=subprocess.PIPE)
+    o, e = append_command.communicate()
+    if e is not None:
+        error_output = e.decode('ascii')
+        print_error("Error: could not append to file.")
+        print_error("File path:" + file_path)
+        print_error("Content to append: " + string_to_append)
+        print_error(error_output)
+        return False
+    else:
+        print_ok("Appended \"" + string_to_append + "\" to file: " + file_path)
+        return True
+
+
+def set_rsyslog_configuration():
+    '''
+    Set the configuration for rsyslog
+    we support from version 7 and above
+    :return:
+    '''
+    udp_enabled = False
+    tcp_enabled = False
+    print("Trying to change rsyslog configuration")
+    print_notice(rsyslog_conf_path)
+    print_warning("Supported rsyslog version is \"7\" and above.")
+    with open(rsyslog_conf_path, "rt") as fin:
+        with open("tmp.txt", "wt") as fout:
+            for line in fin:
+                if "imudp" in line and "#" in line:
+                    fout.write(line.replace("#", ""))
+                    print_notice("Enabling udp module")
+                    print("Line changed: " + line)
+                    udp_enabled = True
+                elif "imtcp" in line and "#" in line:
+                    fout.write(line.replace("#", ""))
+                    print_notice("Enabling tcp module")
+                    print("Line changed: " + line)
+                    tcp_enabled = True
+                # For version 7 and below of rsyslog
+                elif "UDPServerRun" in line and daemon_default_incoming_port in line and daemon_default_incoming_port in line:
+                    fout.write(line.replace("#", ""))
+                    print_notice("Enabling udp module")
+                    print("Line changed: " + line)
+                    udp_enabled = True
+                # For version 7 and below of rsyslog
+                elif "TCPServerRun" in line and daemon_default_incoming_port in line and daemon_default_incoming_port in line:
+                    fout.write(line.replace("#", ""))
+                    print_notice("Enabling tcp module")
+                    print("Line changed: " + line)
+                    tcp_enabled = True
+                else:
+                    fout.write(line)
+    if not udp_enabled:
+        insert_to_file(file_path=rsyslog_conf_path,
+                       string_to_append="module(load=\"imudp\")\ninput(type=\"imudp\" port=\"" + daemon_default_incoming_port + "\")\n")
+    if not tcp_enabled:
+        insert_to_file(file_path=rsyslog_conf_path,
+                       string_to_append="module(load=\"imtcp\")\ninput(type=\"imtcp\" port=\"" + daemon_default_incoming_port + "\")\n")
 
 
 def change_omsagent_protocol(configuration_path):
@@ -365,13 +427,14 @@ def main():
     if is_rsyslog():
         print("Located rsyslog daemon running on the machine")
         create_daemon_forwarding_configuration(omsagent_incoming_port=omsagent_incoming_port,
-                                               daemon_configuration_path=rsyslog_daemon_configuration_path,
+                                               daemon_configuration_path=rsyslog_daemon_forwarding_configuration_path,
                                                daemon_name=rsyslog_daemon_name)
+        set_rsyslog_configuration()
         restart_rsyslog()
     elif is_syslog_ng():
         print("Located syslog-ng daemon running on the machine")
         create_daemon_forwarding_configuration(omsagent_incoming_port=omsagent_incoming_port,
-                                               daemon_configuration_path=syslog_ng_daemon_configuration_path,
+                                               daemon_configuration_path=syslog_ng_daemon_forwarding_configuration_path,
                                                daemon_name=syslog_ng_daemon_name)
         restart_syslog_ng()
     restart_omsagent(workspace_id=workspace_id)
