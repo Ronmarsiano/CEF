@@ -178,7 +178,7 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port):
 
 
 def insert_to_file(file_path, string_to_append):
-    command_tokens = ["sudo", "cat", "\"" + string_to_append + "\"", ">>", file_path]
+    command_tokens = ["sudo", "echo", "\"" + string_to_append + "\"", ">>", file_path]
     print_notice(" ".join(command_tokens))
 
     append_command = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
