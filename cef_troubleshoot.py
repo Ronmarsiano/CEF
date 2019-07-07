@@ -59,7 +59,7 @@ def check_red_hat_firewall_issue():
                 print_warning("Warning: no exception found for omsagent in the firewall")
                 print_warning("You can disable your firewall by using this command: \'sudo systemctl disable firewalld\'")
                 print_warning("You can add exception for the agent port["+agent_port+"] by using the following commands:")
-                print_warning("Add exception:  \n\t\'sudo firewall-cmd --permanent --zone=public --add-rich-rule=\'rule family=\"ipv4\" source address=\"127.0.0.1/32\" port protocol=\"tcp\" port=\"25226\" accept\'")
+                print_warning("Add exception:  \n\t\'sudo firewall-cmd --permanent --zone=public --add-rich-rule=\' rule family=\"ipv4\" source address=\"127.0.0.1/32\" port protocol=\"tcp\" port=\"25226\" accept\'")
                 print_warning("Validate the exception was added in the configuration: \n\t\'sudo cat /etc/firewalld/zones/public.xml\'")
                 print_warning("Reload the firewall: \n\t\'sudo firewall-cmd --reload\'")
 
