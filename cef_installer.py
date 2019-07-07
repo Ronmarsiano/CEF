@@ -178,7 +178,10 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port):
 
 
 def insert_to_file(file_path, string_to_append):
-    append_command = subprocess.Popen(["cat", "\"" + string_to_append + "\"", ">>", file_path], stdout=subprocess.PIPE)
+    command_tokens = ["sudo", "cat", "\"" + string_to_append + "\"", ">>", file_path]
+    print_notice(" ".join(command_tokens))
+    
+    append_command = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     o, e = append_command.communicate()
     if e is not None:
         error_output = e.decode('ascii')
@@ -211,21 +214,32 @@ def set_rsyslog_configuration():
                         fout.write(line.replace("#", ""))
                         print_notice("Enabling udp module")
                         print("Line changed: " + line)
+                    else:
+                        fout.write(line)
                     if daemon_default_incoming_port in line:
+                        print_error("***************************************************")
                         udp_enabled = True
+
                 elif "imtcp" in line:
                     if "#" in line:
                         fout.write(line.replace("#", ""))
                         print_notice("Enabling tcp module")
                         print("Line changed: " + line)
+                    else:
+                        fout.write(line)
                     if daemon_default_incoming_port in line:
+                        print_error("***************************************************")
                         tcp_enabled = True
+
                 # For version 7 and below of rsyslog
                 elif "UDPServerRun" in line and daemon_default_incoming_port in line and daemon_default_incoming_port in line:
                     if "#" in line:
                         fout.write(line.replace("#", ""))
                         print_notice("Enabling udp module")
                         print("Line changed: " + line)
+                    else:
+                        fout.write(line)
+                    print_error("***************************************************")
                     udp_enabled = True
                 # For version 7 and below of rsyslog
                 elif "TCPServerRun" in line and daemon_default_incoming_port in line and daemon_default_incoming_port in line:
@@ -233,6 +247,9 @@ def set_rsyslog_configuration():
                         fout.write(line.replace("#", ""))
                         print_notice("Enabling tcp module")
                         print("Line changed: " + line)
+                    else:
+                        fout.write(line)
+                    print_error("***************************************************")
                     tcp_enabled = True
                 else:
                     fout.write(line)
