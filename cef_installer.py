@@ -244,37 +244,29 @@ def set_rsyslog_new_configuration():
     return True
 
 
-def set_rsyslog_old_configuration():
-    file_content = ""
-    with open(rsyslog_conf_path, "rt") as fin:
-        for line in fin:
-            if "imudp" in line or "UDPServerRun" in line:
-                print_error("Check udp ******************")
-                if "#" in line:
-                    print_error("enable udp ******************")
-                    file_content = file_content + line.replace("#", "") + "\n"
-                else:
-                    file_content = file_content + line + "\n"
-            elif "imtcp" in line or "InputTCPServerRun" in line:
-                print_error("Check tcp ******************")
-                if "#" in line:
-                    file_content = file_content + line.replace("#", "") + "\n"
-                    print_error("enable tcp ******************")
-                else:
-                    file_content = file_content + line + "\n"
-            else:
-                file_content = file_content + line + "\n"
-        fin.close()
-    print_command_response(file_content)
-    command_tokens = ["sudo", "bash", "-c", "printf '" + file_content + "' > " + rsyslog_conf_path]
+def append_line_to_file(file_path, line):
+    command_tokens = ["sudo", "bash", "-c", "printf '" + "\n" + line + "' >> " + file_path]
     write_new_content = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     time.sleep(3)
     o, e = write_new_content.communicate()
     if e is not None:
         error_output = e.decode('ascii')
-        print_error("Error: could not change Rsyslog.conf configuration  in -" + rsyslog_conf_path)
+        print_error("Error: could not change Rsyslog.conf configuration add line \"" + line + "\" to file -" + rsyslog_conf_path)
         print_error(error_output)
         return False
+    return True
+
+
+def set_rsyslog_old_configuration():
+    with open(rsyslog_conf_path, "rt") as fin:
+        for line in fin:
+            if "imudp" in line or "UDPServerRun" in line:
+                if "#" in line:
+                    append_line_to_file(line.replace("#", ""))
+            elif "imtcp" in line or "InputTCPServerRun" in line:
+                if "#" in line:
+                    append_line_to_file(line.replace("#", ""))
+        fin.close()
     print_ok("Rsyslog.conf configuration was changed to fit required protocol - " + rsyslog_conf_path)
     return True
 
