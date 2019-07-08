@@ -15,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_installer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="530">
-              <caret line="259" column="47" selection-start-line="259" selection-start-column="47" selection-end-line="259" selection-end-column="47" />
+            <state relative-caret-position="527">
+              <caret line="246" column="16" selection-start-line="246" selection-start-column="16" selection-end-line="246" selection-end-column="16" />
               <folding>
                 <element signature="e#26#43#0" expanded="true" />
               </folding>
@@ -78,7 +78,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>restart_omsagent</find>
       <find>print_command_response</find>
       <find>check_file_in_directory</find>
       <find>oms_agent_configuration_content_tokens</find>
@@ -107,6 +106,7 @@
       <find>create_daemon_forwarding_configuration</find>
       <find>firewald</find>
       <find>syslog_ng_daemon_forwarding_configuration_path</find>
+      <find>set_rsyslog_old_configuration</find>
       <find>set_rsyslog_configuration</find>
     </findStrings>
   </component>
@@ -310,8 +310,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_installer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="530">
-          <caret line="259" column="47" selection-start-line="259" selection-start-column="47" selection-end-line="259" selection-end-column="47" />
+        <state relative-caret-position="527">
+          <caret line="246" column="16" selection-start-line="246" selection-start-column="16" selection-end-line="246" selection-end-column="16" />
           <folding>
             <element signature="e#26#43#0" expanded="true" />
           </folding>

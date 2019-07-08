@@ -225,7 +225,7 @@ def set_rsyslog_new_configuration():
         with open("tmp.txt", "wt") as fout:
             for line in fin:
                 if "imudp" in line or "imtcp" in line:
-                    if "#" in line:
+                    if "#" not in line:
                         fout.write(line.replace("#", ""))
                     else:
                         fout.write(line)
@@ -245,28 +245,27 @@ def set_rsyslog_new_configuration():
 
 
 def set_rsyslog_old_configuration():
+    file_content = ""
     with open(rsyslog_conf_path, "rt") as fin:
-        with open("tmp.txt", "wt") as fout:
-            for line in fin:
-                if "imudp" in line or "UDPServerRun" in line:
-                    print_error("Check udp ******************")
-                    if "#" in line:
-                        print_error("enable udp ******************")
-                        fout.write(line.replace("#", ""))
-                    else:
-                        fout.write(line)
-                elif "imtcp" in line or "InputTCPServerRun" in line:
-                    print_error("Check tcp ******************")
-                    if "#" in line:
-                        fout.write(line.replace("#", ""))
-                        print_error("enable tcp ******************")
-                    else:
-                        fout.write(line)
+        for line in fin:
+            if "imudp" in line or "UDPServerRun" in line:
+                print_error("Check udp ******************")
+                if "#" in line:
+                    print_error("enable udp ******************")
+                    file_content = file_content + line.replace("#", "") + "\n"
                 else:
-                    fout.write(line)
-            fout.write("#Ron Changed Me")
-            fout.close()
-    command_tokens = ["sudo", "mv", "tmp.txt", rsyslog_conf_path]
+                    file_content = file_content + line + "\n"
+            elif "imtcp" in line or "InputTCPServerRun" in line:
+                print_error("Check tcp ******************")
+                if "#" in line:
+                    file_content = file_content + line.replace("#", "") + "\n"
+                    print_error("enable tcp ******************")
+                else:
+                    file_content = file_content + line + "\n"
+            else:
+                file_content = file_content + line + "\n"
+        fin.close()
+    command_tokens = ["sudo", "bash", "-c", "printf '" + file_content + "' > " + rsyslog_conf_path]
     write_new_content = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     time.sleep(3)
     o, e = write_new_content.communicate()
