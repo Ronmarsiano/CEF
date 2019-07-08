@@ -69,12 +69,17 @@ def download_omsagent():
     o, e = download_command.communicate()
     time.sleep(3)
     if e is not None:
-        error_output = e.decode('ascii')
-        print_error("Error: could not download omsagent.")
-        print_error(error_output)
+        handle_error(e, error_response_str="Error: could not download omsagent.")
         return False
     print_ok("Downloaded omsagent successfully.")
     return True
+
+
+def handle_error(e, error_response_str):
+    error_output = e.decode('ascii')
+    print_error(error_response_str)
+    print_error(error_output)
+    return False
 
 
 def install_omsagent(workspace_id, primary_key):
@@ -91,9 +96,7 @@ def install_omsagent(workspace_id, primary_key):
     o, e = install_omsagent_command.communicate()
     time.sleep(3)
     if e is not None:
-        error_output = e.decode('ascii')
-        print_error("Error: could not install omsagent.")
-        print_error(error_output)
+        handle_error(e, error_response_str="Error: could not install omsagent.")
         return False
     print_ok("Installed omsagent successfully.")
     return True
@@ -128,16 +131,7 @@ def create_daemon_forwarding_configuration(omsagent_incoming_port, daemon_config
     print("Path:")
     print_notice(daemon_configuration_path)
     file_content = get_daemon_configuration_content(daemon_name, omsagent_incoming_port)
-    command_tokens = ["sudo", "bash", "-c", "printf '" + file_content + "' > " + daemon_configuration_path]
-    print_notice("Writing configuration - "+" ".join(command_tokens))
-    set_daemon_configuration = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
-    o, e = set_daemon_configuration.communicate()
-    time.sleep(3)
-    if e is not None:
-        error_output = e.decode('ascii')
-        print_error("Could not change " + daemon_name + " daemon configuration.")
-        print_error(error_output)
-        return False
+    append_content_to_file(file_content, daemon_configuration_path)
     print_ok("Configuration for " + daemon_name + " daemon was changed successfully.")
     return True
 
@@ -162,9 +156,7 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port):
     set_omsagent_configuration_command = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     o, e = set_omsagent_configuration_command.communicate()
     if e is not None:
-        error_output = e.decode('ascii')
-        print_error("Error: could not download omsagent configuration.")
-        print_error(error_output)
+        handle_error(e, error_response_str="Error: could not download omsagent configuration.")
         return False
     print_ok("Configuration for omsagent downloaded successfully.")
     print("Trying to changed omsagent configuration")
@@ -183,16 +175,10 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port):
 
 def rsyslog_red_hat_mod_load_tcp(fout, line):
     if "ModLoad" in line and "imtcp" in line:
-        if "#" in line:
-            fout.write(line.replace("#", ""))
-        else:
-            fout.write(line)
+        fout.write(line.replace("#", "")) if "#" in line else fout.write(line)
         return True
     elif "TCPServerRun" in line and daemon_default_incoming_port in line:
-        if "#" in line:
-            fout.write(line.replace("#", ""))
-        else:
-            fout.write(line)
+        fout.write(line.replace("#", "")) if "#" in line else fout.write(line)
         return True
     return False
 
@@ -227,10 +213,7 @@ def set_rsyslog_new_configuration():
         with open("tmp.txt", "wt") as fout:
             for line in fin:
                 if "imudp" in line or "imtcp" in line:
-                    if "#" in line:
-                        fout.write(line.replace("#", ""))
-                    else:
-                        fout.write(line)
+                    fout.write(line.replace("#", "")) if "#" in line else fout.write(line)
                 else:
                     fout.write(line)
     command_tokens = ["sudo", "mv", "tmp.txt", rsyslog_conf_path]
@@ -238,15 +221,13 @@ def set_rsyslog_new_configuration():
     time.sleep(3)
     o, e = write_new_content.communicate()
     if e is not None:
-        error_output = e.decode('ascii')
-        print_error("Error: could not change Rsyslog.conf configuration  in -" + rsyslog_conf_path)
-        print_error(error_output)
+        handle_error(e, error_response_str="Error: could not change Rsyslog.conf configuration  in -" + rsyslog_conf_path)
         return False
     print_ok("Rsyslog.conf configuration was changed to fit required protocol - " + rsyslog_conf_path)
     return True
 
 
-def append_line_to_file(line, file_path):
+def append_content_to_file(line, file_path):
     command_tokens = ["sudo", "bash", "-c", "printf '" + "\n" + line + "' >> " + file_path]
     print_notice(" ".join(command_tokens))
     write_new_content = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
@@ -266,16 +247,14 @@ def set_rsyslog_old_configuration():
     with open(rsyslog_conf_path, "rt") as fin:
         for line in fin:
             if "imudp" in line or "UDPServerRun" in line:
-                if "#" in line:
-                    add_udp = True
+                add_udp = True if "#" in line else False
             elif "imtcp" in line or "InputTCPServerRun" in line:
-                if "#" in line:
-                    add_tcp = True
+                add_tcp = True if "#" in line else False
         fin.close()
-    if add_udp:
-        append_line_to_file(rsyslog_old_config_udp_content, rsyslog_conf_path)
+    if add_udp is True:
+        append_content_to_file(rsyslog_old_config_udp_content, rsyslog_conf_path)
     if add_tcp:
-        append_line_to_file(rsyslog_old_config_tcp_content, rsyslog_conf_path)
+        append_content_to_file(rsyslog_old_config_tcp_content, rsyslog_conf_path)
     print_ok("Rsyslog.conf configuration was changed to fit required protocol - " + rsyslog_conf_path)
     return True
 
@@ -314,9 +293,7 @@ def change_omsagent_protocol(configuration_path):
     time.sleep(3)
     o, e = write_new_content.communicate()
     if e is not None:
-        error_output = e.decode('ascii')
-        print_error("Error: could not change omsagent configuration port in ." + configuration_path)
-        print_error(error_output)
+        handle_error(e, error_response_str="Error: could not change omsagent configuration port in ." + configuration_path)
         return False
     print_ok("Omsagent configuration was changed to fit required protocol - " + configuration_path)
     return True
@@ -337,9 +314,7 @@ def change_omsagent_configuration_port(omsagent_incoming_port, configuration_pat
     time.sleep(3)
     o, e = write_new_content.communicate()
     if e is not None:
-        error_output = e.decode('ascii')
-        print_error("Error: could not change omsagent configuration port in ." + configuration_path)
-        print_error(error_output)
+        handle_error(e, error_response_str="Error: could not change omsagent configuration port in ." + configuration_path)
         return False
     print_ok("Omsagent incoming port was changed in configuration - " + configuration_path)
     return True
@@ -356,9 +331,7 @@ def restart_rsyslog():
     time.sleep(3)
     o, e = restart_rsyslog_command.communicate()
     if e is not None:
-        error_output = e.decode('ascii')
-        print_error("Could not restart rsyslog daemon")
-        print_error(error_output)
+        handle_error(e, error_response_str="Could not restart rsyslog daemon")
         return False
     print_ok("Rsyslog daemon restarted successfully")
     return True
@@ -375,9 +348,7 @@ def restart_syslog_ng():
     time.sleep(3)
     o, e = restart_rsyslog_command.communicate()
     if e is not None:
-        error_output = e.decode('ascii')
-        print_error("Could not restart syslog-ng daemon")
-        print_error(error_output)
+        handle_error(e, error_response_str="Could not restart syslog-ng daemon")
         return False
     print_ok("Syslog-ng daemon restarted successfully")
     return True
@@ -395,9 +366,7 @@ def restart_omsagent(workspace_id):
     time.sleep(3)
     o, e = restart_omsagent_command.communicate()
     if e is not None:
-        error_output = e.decode('ascii')
-        print_error("Error: could not restart omsagent")
-        print_error(error_output)
+        handle_error(e, error_response_str="Error: could not restart omsagent")
         return False
     print_ok("Omsagent restarted successfully")
     return True
