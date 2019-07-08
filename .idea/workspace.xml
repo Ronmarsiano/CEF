@@ -15,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_installer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-7">
-              <caret line="213" selection-start-line="213" selection-start-column="2" selection-end-line="216" selection-end-column="39" />
+            <state relative-caret-position="530">
+              <caret line="259" column="47" selection-start-line="259" selection-start-column="47" selection-end-line="259" selection-end-column="47" />
               <folding>
                 <element signature="e#26#43#0" expanded="true" />
               </folding>
@@ -310,8 +310,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_installer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7">
-          <caret line="213" selection-start-line="213" selection-start-column="2" selection-end-line="216" selection-end-column="39" />
+        <state relative-caret-position="530">
+          <caret line="259" column="47" selection-start-line="259" selection-start-column="47" selection-end-line="259" selection-end-column="47" />
           <folding>
             <element signature="e#26#43#0" expanded="true" />
           </folding>

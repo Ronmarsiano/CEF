@@ -211,12 +211,72 @@ def rsyslog_red_hat_mod_load_udp(fout, line):
     return False
 
 
-# def rsyslog_configuration_enable_old_configuration(protocl):
-#     with open(rsyslog_conf_path, "rt") as fin:
-#         for line in fin:
-#             if "imudp" in line and "#
+def is_rsyslog_new_configuration():
+    with open(rsyslog_conf_path, "rt") as fin:
+        for line in fin:
+            if "module" in line and "load" in line:
+                return True
+        fin.close()
+    return False
 
 
+def set_rsyslog_new_configuration():
+    with open(rsyslog_conf_path, "rt") as fin:
+        with open("tmp.txt", "wt") as fout:
+            for line in fin:
+                if "imudp" in line or "imtcp" in line:
+                    if "#" in line:
+                        fout.write(line.replace("#", ""))
+                    else:
+                        fout.write(line)
+                else:
+                    fout.write(line)
+    command_tokens = ["sudo", "mv", "tmp.txt", rsyslog_conf_path]
+    write_new_content = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
+    time.sleep(3)
+    o, e = write_new_content.communicate()
+    if e is not None:
+        error_output = e.decode('ascii')
+        print_error("Error: could not change Rsyslog.conf configuration  in -" + rsyslog_conf_path)
+        print_error(error_output)
+        return False
+    print_ok("Rsyslog.conf configuration was changed to fit required protocol - " + rsyslog_conf_path)
+    return True
+
+
+def set_rsyslog_old_configuration():
+    with open(rsyslog_conf_path, "rt") as fin:
+        with open("tmp.txt", "wt") as fout:
+            for line in fin:
+                if "imudp" in line or "UDPServerRun" in line:
+                    print_error("Check udp ******************")
+                    if "#" in line:
+                        print_error("enable udp ******************")
+                        fout.write(line.replace("#", ""))
+                    else:
+                        fout.write(line)
+                elif "imtcp" in line or "InputTCPServerRun" in line:
+                    print_error("Check tcp ******************")
+                    if "#" in line:
+                        fout.write(line.replace("#", ""))
+                        print_error("enable tcp ******************")
+                    else:
+                        fout.write(line)
+                else:
+                    fout.write(line)
+            fout.write("#Ron Changed Me")
+            fout.close()
+    command_tokens = ["sudo", "mv", "tmp.txt", rsyslog_conf_path]
+    write_new_content = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
+    time.sleep(3)
+    o, e = write_new_content.communicate()
+    if e is not None:
+        error_output = e.decode('ascii')
+        print_error("Error: could not change Rsyslog.conf configuration  in -" + rsyslog_conf_path)
+        print_error(error_output)
+        return False
+    print_ok("Rsyslog.conf configuration was changed to fit required protocol - " + rsyslog_conf_path)
+    return True
 
 
 def set_rsyslog_configuration():
@@ -225,62 +285,12 @@ def set_rsyslog_configuration():
     we support from version 7 and above
     :return:
     '''
-    udp_enabled = False
-    # tcp_enabled = False
-    # # old configuration using ModLoad
-    # old_rsyslog_configuration = False
-    # # new configuration using module load
-    # new_rsyslog_configuration = False
-    #
-    # print("Trying to change rsyslog configuration")
-    # print_command_response("Content should contain:")
-    # print_command_response(rsyslog_module_udp_content)
-    # print_command_response(rsyslog_module_tcp_content)
-    # print_notice(rsyslog_conf_path)
-    # print_warning("Supported rsyslog version is \"7\" to rsyslog 8.1905.0")
-    # with open(rsyslog_conf_path, "rt") as fin:
-    #         for line in fin:
-    #             if "$ModLoad" in line:
-    #                 old_rsyslog_configuration = True
-    #             elif "module" in line and "load" in line:
-    #                 new_rsyslog_configuration = True
-    #
-    #
-    #             if "imudp" in line and ("module" in line or "input" in line):
-    #                 if "#" in line:
-    #                     fout.write(line.replace("#", ""))
-    #                 else:
-    #                     fout.write(line)
-    #                 if daemon_default_incoming_port in line:
-    #                     udp_enabled = True
-    #             elif "imtcp" in line and ("module" in line or "input" in line):
-    #                 if "#" in line:
-    #                     fout.write(line.replace("#", ""))
-    #                 else:
-    #                     fout.write(line)
-    #                 if daemon_default_incoming_port in line:
-    #                     tcp_enabled = True
-    #             elif rsyslog_red_hat_mod_load_tcp(fout, line):
-    #                 tcp_enabled = True
-    #             elif rsyslog_red_hat_mod_load_udp(fout, line):
-    #                 udp_enabled = True
-    #             else:
-    #                 fout.write(line)
-    #         if not udp_enabled:
-    #             fout.write(rsyslog_module_udp_content)
-    #         if not tcp_enabled:
-    #             fout.write(rsyslog_module_tcp_content)
-    # command_tokens = ["sudo", "mv", "tmp.txt", rsyslog_conf_path]
-    # write_new_content = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
-    # time.sleep(3)
-    # o, e = write_new_content.communicate()
-    # if e is not None:
-    #     error_output = e.decode('ascii')
-    #     print_error("Error: could not change omsagent configuration port in ." + rsyslog_conf_path)
-    #     print_error(error_output)
-    #     return False
-    # print_ok("Omsagent configuration was changed to fit required protocol - " + rsyslog_conf_path)
-    # return True
+    if is_rsyslog_new_configuration():
+        print_error("New config")
+        set_rsyslog_new_configuration()
+    else:
+        set_rsyslog_old_configuration()
+        print_error("Old config")
 
 
 def change_omsagent_protocol(configuration_path):
@@ -474,7 +484,7 @@ def main():
         create_daemon_forwarding_configuration(omsagent_incoming_port=omsagent_incoming_port,
                                                daemon_configuration_path=rsyslog_daemon_forwarding_configuration_path,
                                                daemon_name=rsyslog_daemon_name)
-        #set_rsyslog_configuration()
+        set_rsyslog_configuration()
         restart_rsyslog()
     elif is_syslog_ng():
         print("Located syslog-ng daemon running on the machine")
