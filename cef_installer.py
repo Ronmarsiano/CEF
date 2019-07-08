@@ -131,7 +131,7 @@ def create_daemon_forwarding_configuration(omsagent_incoming_port, daemon_config
     print("Path:")
     print_notice(daemon_configuration_path)
     file_content = get_daemon_configuration_content(daemon_name, omsagent_incoming_port)
-    append_content_to_file(file_content, daemon_configuration_path)
+    append_content_to_file(file_content, daemon_configuration_path, overide=True)
     print_ok("Configuration for " + daemon_name + " daemon was changed successfully.")
     return True
 
@@ -173,32 +173,6 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port):
         return False
 
 
-def rsyslog_red_hat_mod_load_tcp(fout, line):
-    if "ModLoad" in line and "imtcp" in line:
-        fout.write(line.replace("#", "")) if "#" in line else fout.write(line)
-        return True
-    elif "TCPServerRun" in line and daemon_default_incoming_port in line:
-        fout.write(line.replace("#", "")) if "#" in line else fout.write(line)
-        return True
-    return False
-
-
-def rsyslog_red_hat_mod_load_udp(fout, line):
-    if "ModLoad" in line and "imudp" in line:
-        if "#" in line:
-            fout.write(line.replace("#", ""))
-        else:
-            fout.write(line)
-        return True
-    elif "UDPServerRun" in line and daemon_default_incoming_port in line:
-        if "#" in line:
-            fout.write(line.replace("#", ""))
-        else:
-            fout.write(line)
-        return True
-    return False
-
-
 def is_rsyslog_new_configuration():
     with open(rsyslog_conf_path, "rt") as fin:
         for line in fin:
@@ -227,16 +201,13 @@ def set_rsyslog_new_configuration():
     return True
 
 
-def append_content_to_file(line, file_path):
-    command_tokens = ["sudo", "bash", "-c", "printf '" + "\n" + line + "' >> " + file_path]
-    print_notice(" ".join(command_tokens))
+def append_content_to_file(line, file_path, overide = False):
+    command_tokens = ["sudo", "bash", "-c", "printf '" + "\n" + line + "' >> " + file_path] if not overide else ["sudo", "bash", "-c", "printf '" + "\n" + line + "' > " + file_path]
     write_new_content = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     time.sleep(3)
     o, e = write_new_content.communicate()
     if e is not None:
-        error_output = e.decode('ascii')
-        print_error("Error: could not change Rsyslog.conf configuration add line \"" + line + "\" to file -" + rsyslog_conf_path)
-        print_error(error_output)
+        handle_error(e, error_response_str="Error: could not change Rsyslog.conf configuration add line \"" + line + "\" to file -" + rsyslog_conf_path)
         return False
     return True
 
