@@ -225,7 +225,7 @@ def set_rsyslog_new_configuration():
         with open("tmp.txt", "wt") as fout:
             for line in fin:
                 if "imudp" in line or "imtcp" in line:
-                    if "#" not in line:
+                    if "#" in line:
                         fout.write(line.replace("#", ""))
                     else:
                         fout.write(line)
@@ -265,6 +265,7 @@ def set_rsyslog_old_configuration():
             else:
                 file_content = file_content + line + "\n"
         fin.close()
+    print_command_response(file_content)
     command_tokens = ["sudo", "bash", "-c", "printf '" + file_content + "' > " + rsyslog_conf_path]
     write_new_content = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     time.sleep(3)
