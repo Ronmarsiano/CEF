@@ -15,6 +15,8 @@ syslog_ng_daemon_forwarding_configuration_path = "/etc/syslog-ng/conf.d/security
 rsyslog_conf_path = "/etc/rsyslog.conf"
 rsyslog_module_udp_content = "# provides UDP syslog reception\nmodule(load=\"imudp\")\ninput(type=\"imudp\" port=\"" + daemon_default_incoming_port + "\")\n"
 rsyslog_module_tcp_content = "# provides TCP syslog reception\nmodule(load=\"imtcp\")\ninput(type=\"imtcp\" port=\"" + daemon_default_incoming_port + "\")\n"
+rsyslog_old_config_udp_content = "# provides UDP syslog reception\n$ModLoad imudp\n$UDPServerRun " + daemon_default_incoming_port + "\n"
+rsyslog_old_config_tcp_content = "# provides TCP syslog reception\n$ModLoad imtcp\n$TCPServerRun " + daemon_default_incoming_port + "\n"
 
 def print_error(input_str):
     '''
@@ -244,8 +246,9 @@ def set_rsyslog_new_configuration():
     return True
 
 
-def append_line_to_file(file_path, line):
+def append_line_to_file(line, file_path):
     command_tokens = ["sudo", "bash", "-c", "printf '" + "\n" + line + "' >> " + file_path]
+    print_notice(" ".join(command_tokens))
     write_new_content = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     time.sleep(3)
     o, e = write_new_content.communicate()
@@ -258,15 +261,21 @@ def append_line_to_file(file_path, line):
 
 
 def set_rsyslog_old_configuration():
+    add_udp = False
+    add_tcp = False
     with open(rsyslog_conf_path, "rt") as fin:
         for line in fin:
             if "imudp" in line or "UDPServerRun" in line:
                 if "#" in line:
-                    append_line_to_file(line.replace("#", ""))
+                    add_udp = True
             elif "imtcp" in line or "InputTCPServerRun" in line:
                 if "#" in line:
-                    append_line_to_file(line.replace("#", ""))
+                    add_tcp = True
         fin.close()
+    if add_udp:
+        append_line_to_file(rsyslog_old_config_udp_content, rsyslog_conf_path)
+    if add_tcp:
+        append_line_to_file(rsyslog_old_config_tcp_content, rsyslog_conf_path)
     print_ok("Rsyslog.conf configuration was changed to fit required protocol - " + rsyslog_conf_path)
     return True
 
