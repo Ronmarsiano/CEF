@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="edc9c0a2-b854-489a-ab81-b23afdd1b3fb" name="Default Changelist" comment="" />
+    <list default="true" id="edc9c0a2-b854-489a-ab81-b23afdd1b3fb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/cef_troubleshoot.py" beforeDir="false" afterPath="$PROJECT_DIR$/cef_troubleshoot.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,8 +15,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cef_installer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1021">
-              <caret line="437" lean-forward="true" selection-start-line="437" selection-end-line="437" />
+            <state relative-caret-position="799">
+              <caret line="229" column="102" lean-forward="true" selection-start-line="229" selection-start-column="102" selection-end-line="229" selection-end-column="102" />
               <folding>
                 <element signature="e#26#43#0" expanded="true" />
               </folding>
@@ -25,8 +27,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="307" column="54" selection-start-line="307" selection-start-column="54" selection-end-line="307" selection-end-column="54" />
+            <state relative-caret-position="884">
+              <caret line="85" column="18" selection-start-line="85" selection-start-column="18" selection-end-line="85" selection-end-column="18" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
               </folding>
@@ -57,8 +59,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>rsyslog_module_udp_content</find>
-      <find>rsyslog_cef_logs_received_in_correct_format</find>
       <find>get_syslog_ng_damon_configuration_content</find>
       <find>get_daemon_configuration_content</find>
       <find>create_daemon_forwarding_configuration</find>
@@ -87,6 +87,8 @@
       <find>security_enhanced_linux</find>
       <find>red_hat_rsyslog_security_enhanced_linux_documentation</find>
       <find>firewal</find>
+      <find>ld config</find>
+      <find>firewall</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -99,8 +101,8 @@
         <option value="$PROJECT_DIR$/troubleshoot_cef.py" />
         <option value="$PROJECT_DIR$/installCef.py" />
         <option value="$PROJECT_DIR$/deprecated_troubleshoot_cef.py" />
-        <option value="$PROJECT_DIR$/cef_troubleshoot.py" />
         <option value="$PROJECT_DIR$/cef_installer.py" />
+        <option value="$PROJECT_DIR$/cef_troubleshoot.py" />
       </list>
     </option>
   </component>
@@ -279,8 +281,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_installer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1021">
-          <caret line="437" lean-forward="true" selection-start-line="437" selection-end-line="437" />
+        <state relative-caret-position="799">
+          <caret line="229" column="102" lean-forward="true" selection-start-line="229" selection-start-column="102" selection-end-line="229" selection-end-column="102" />
           <folding>
             <element signature="e#26#43#0" expanded="true" />
           </folding>
@@ -289,8 +291,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="307" column="54" selection-start-line="307" selection-start-column="54" selection-end-line="307" selection-end-column="54" />
+        <state relative-caret-position="884">
+          <caret line="85" column="18" selection-start-line="85" selection-start-column="18" selection-end-line="85" selection-end-column="18" />
           <folding>
             <element signature="e#26#36#0" expanded="true" />
           </folding>

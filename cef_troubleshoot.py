@@ -57,8 +57,8 @@ def check_red_hat_firewall_issue():
             else:
                 print_warning("Warning: no exception found for omsagent in the firewall")
                 print_warning("You can disable your firewall by using this command: \'sudo systemctl stop firewalld\'")
-                print_warning("You can add exception for the agent port["+agent_port+"] by using the following commands:")
-                print_warning("Add exception:  \n\t\'sudo firewall-cmd --permanent --zone=public --add-rich-rule=\' rule family=\"ipv4\" source address=\"127.0.0.1/32\" port protocol=\"tcp\" port=\"25226\" accept\'")
+                print_warning("You can add exception for the agent port[" + agent_port + "] by using the following commands:")
+                print_warning("Add exception:  \n\t\'sudo firewall-cmd --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport " + agent_port + "  -j ACCEPT")
                 print_warning("Validate the exception was added in the configuration: \n\t\'sudo cat /etc/firewalld/zones/public.xml\'")
                 print_warning("Reload the firewall: \n\t\'sudo firewall-cmd --reload\'")
 
@@ -109,7 +109,7 @@ def security_enhanced_linux_enabled():
 
 def security_enhanced_linux():
     if security_enhanced_linux_enabled() is True:
-        print_error("Security enhanced linux is enabled.\nTo use TCP with syslog daemon the omsagent incoming port should be inserted")
+        print_warning("Security enhanced linux is enabled.\nTo use TCP with syslog daemon the omsagent incoming port should be inserted")
         print("To enable the port")
         print_notice("semanage port -a -t syslogd_port_t -p tcp " + agent_port)
         print("To validate enabled port")
@@ -161,7 +161,7 @@ def rsyslog_cef_logs_received_in_correct_format():
     if end_amount > start_amount:
         print_ok("Ok: received CEF messages by the daemon")
     else:
-        print_error("Error: no CEF messages received by the daemon.\nPlease validate that you do send CEF messages to agent.")
+        print_warning("Error: no CEF messages received by the daemon.\nPlease validate that you do send CEF messages to agent.")
 
 
 def incoming_logs_validations(incoming_port, ok_message):
@@ -407,16 +407,20 @@ def check_rsyslog_configuration():
             if "imudp" in line or "DPServerRun" in line:
                 if "#" in line:
                     udp = False
-                    print_warning("Warning: udp communication is not enabled to the daemon.")
+
                 else:
                     udp = True
             # second part is for red hat [InputTCPServerRun]
             if "imtcp" in line or "InputTCPServerRun" in line:
                 if "#" in line:
                     tcp = False
-                    print_warning("Warning: tcp communication is not enabled to the daemon.")
+
                 else:
                     tcp = True
+        if not udp:
+            print_warning("Warning: udp communication is not enabled to the daemon.")
+        if not tcp:
+            print_warning("Warning: tcp communication is not enabled to the daemon.")
         return udp or tcp
 
 
