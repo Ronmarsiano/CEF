@@ -238,11 +238,9 @@ def set_rsyslog_configuration():
     :return:
     '''
     if is_rsyslog_new_configuration():
-        print_error("New config")
         set_rsyslog_new_configuration()
     else:
         set_rsyslog_old_configuration()
-        print_error("Old config")
 
 
 def change_omsagent_protocol(configuration_path):
