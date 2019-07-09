@@ -453,7 +453,6 @@ def main():
                                                daemon_configuration_path=rsyslog_daemon_forwarding_configuration_path,
                                                daemon_name=rsyslog_daemon_name)
         set_rsyslog_configuration()
-        security_enhanced_linux()
         restart_rsyslog()
     elif is_syslog_ng():
         print("Located syslog-ng daemon running on the machine")
@@ -462,6 +461,7 @@ def main():
                                                daemon_name=syslog_ng_daemon_name)
         restart_syslog_ng()
     restart_omsagent(workspace_id=workspace_id)
+    security_enhanced_linux()
 
 
 main()

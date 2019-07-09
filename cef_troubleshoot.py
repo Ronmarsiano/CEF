@@ -493,6 +493,8 @@ def main():
     omsagent_security_event_conf_validation(workspace_id=workspace_id)
     # validate firewalld
     check_red_hat_firewall_issue()
+    # Check issue regarding security enhanced linux blocking tcp ports
+    security_enhanced_linux()
     # testing that the daemon is running
     if check_daemon("rsyslog"):
         handle_rsyslog(workspace_id)
