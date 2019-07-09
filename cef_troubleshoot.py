@@ -99,12 +99,14 @@ def security_enhanced_linux_enabled():
     print_notice("sestatus")
     command_tokens = ["sestatus"]
     sestatus_command = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
-    grep = subprocess.Popen(["grep", "-i", "SELinux status"], stdin=sestatus_command.stdout, stdout=subprocess.PIPE)
-    o, e = grep.communicate()
+    o, e = sestatus_command.communicate()
     if e is not None:
         print_error("Could not execute \'sestatus\' to check if security enhanced linux is enabled")
     else:
-        return "enabled" in o
+        for line in o.decode('ascii').split('\n'):
+            if "SELinux status" in line and "enabled" in line:
+                return True
+        return False
 
 
 def security_enhanced_linux():
