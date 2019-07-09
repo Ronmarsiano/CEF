@@ -336,7 +336,7 @@ def test_daemon_configuration(daemon_name):
 def validate_daemon_configuration_content(daemon_name, valid_content_tokens_arr):
     print("Trying to validate the content of daemon configuration.")
     print_notice("For extra verification please make sure the configuration content is as defined in the documentation.")
-    if not file_contains_string(valid_content_tokens_arr, "/etc/" + daemon_name + "/security-config-omsagent.conf"):
+    if not file_contains_string(valid_content_tokens_arr, "/etc/" + daemon_name if daemon_name is "rsyslog.d" else (daemon_name + "/conf.d") + "/security-config-omsagent.conf"):
         print_error("Error - security-config-omsagent.conf does not contain " + daemon_name + " daemon routing to oms-agent")
         print("\tSecurity-config-omsagent.conf should contain the following tokens: \n" + valid_content_tokens_arr)
         return False

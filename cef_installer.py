@@ -368,9 +368,11 @@ def get_rsyslog_daemon_configuration_content(omsagent_incoming_port):
 
 
 def get_syslog_ng_damon_configuration_content(omsagent_incoming_port):
-    part_1 = "filter f_oms_cef { match(\"CEF\" value(\"MESSAGE\"));};\ndestination security_oms { tcp(\"127.0.0.1\" port("
-    part_2 = "));};\nlog { source(s_src); filter(f_oms_cef); destination(security_oms); };"
-    content = part_1 + omsagent_incoming_port + part_2
+    oms_source = "source oms_source { udp( port(" + daemon_default_incoming_port + ")); tcp( port(" + daemon_default_incoming_port + "));};\n"
+    oms_filter = "filter f_oms_filter {match(\"CEF\" value(\"MESSAGE\"));};\n"
+    oms_destination = "destination oms_destination {tcp(\"127.0.0.1\" port(" + omsagent_incoming_port + "));};\n"
+    log = "log {source(oms_source);filter(f_oms_filter);destination(oms_destination);};\n"
+    content = oms_source + oms_filter + oms_destination + log
     print("Syslog-ng configuration for forwarding CEF messages to omsagent content is:")
     print_command_response(content)
     return content
