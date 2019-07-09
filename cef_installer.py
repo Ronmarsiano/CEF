@@ -17,7 +17,6 @@ rsyslog_module_udp_content = "# provides UDP syslog reception\nmodule(load=\"imu
 rsyslog_module_tcp_content = "# provides TCP syslog reception\nmodule(load=\"imtcp\")\ninput(type=\"imtcp\" port=\"" + daemon_default_incoming_port + "\")\n"
 rsyslog_old_config_udp_content = "# provides UDP syslog reception\n$ModLoad imudp\n$UDPServerRun " + daemon_default_incoming_port + "\n"
 rsyslog_old_config_tcp_content = "# provides TCP syslog reception\n$ModLoad imtcp\n$InputTCPServerRun " + daemon_default_incoming_port + "\n"
-red_hat_rsyslog_security_enhanced_linux_documentation = "https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s1-configuring_rsyslog_on_a_logging_server"
 
 
 def print_error(input_str):
@@ -361,31 +360,6 @@ def get_daemon_configuration_content(daemon_name, omsagent_incoming_port):
         return False
 
 
-def security_enhanced_linux_enabled():
-    print("Checking if security enhanced linux is enabled")
-    print_notice("sestatus")
-    command_tokens = ["sestatus"]
-    sestatus_command = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
-    grep = subprocess.Popen(["grep", "-i", "SELinux status"], stdin=sestatus_command.stdout, stdout=subprocess.PIPE)
-    o, e = grep.communicate()
-    if e is not None:
-        handle_error(e, error_response_str="Could not execute \'sestatus\' to check if security enhanced linux is enabled")
-    else:
-        return "enabled" in o
-
-
-def security_enhanced_linux():
-    if security_enhanced_linux_enabled() is True:
-        print_error("Security enhanced linux is enabled.\nTo use TCP with syslog daemon the omsagent incoming port should be inserted")
-        print("To enable the port")
-        print_notice("semanage port -a -t syslogd_port_t -p tcp " + omsagent_default_incoming_port)
-        print("To validate enabled port")
-        print_notice("semanage port -l | grep " + omsagent_default_incoming_port)
-        print("To install the policy editor")
-        print_notice("yum install policycoreutils-python")
-        print_warning("For more information: " + red_hat_rsyslog_security_enhanced_linux_documentation)
-
-
 def get_rsyslog_daemon_configuration_content(omsagent_incoming_port):
     '''Rsyslog accept every message containing CEF'''
     rsyslog_daemon_configuration_content = ":msg, contains, \"CEF\"  ~\n*.* @@127.0.0.1:"
@@ -461,7 +435,6 @@ def main():
                                                daemon_name=syslog_ng_daemon_name)
         restart_syslog_ng()
     restart_omsagent(workspace_id=workspace_id)
-    security_enhanced_linux()
 
 
 main()
