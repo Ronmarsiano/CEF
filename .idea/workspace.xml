@@ -27,8 +27,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="935">
-              <caret line="65" column="100" selection-start-line="65" selection-start-column="100" selection-end-line="65" selection-end-column="100" />
+            <state relative-caret-position="391">
+              <caret line="175" column="88" lean-forward="true" selection-start-line="175" selection-start-column="23" selection-end-line="175" selection-end-column="88" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
               </folding>
@@ -59,11 +59,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>get_daemon_configuration_content</find>
-      <find>create_daemon_forwarding_configuration</find>
-      <find>firewald</find>
-      <find>syslog_ng_daemon_forwarding_configuration_path</find>
-      <find>command_tokens</find>
       <find>printf</find>
       <find>rsyslog_red_hat_mod_load_udp</find>
       <find>rsyslog_red_hat_mod_load_tcp</find>
@@ -89,6 +84,11 @@
       <find>ld config</find>
       <find>firewall</find>
       <find>split</find>
+      <find>command</find>
+      <find>command_tok</find>
+      <find>join</find>
+      <find>tcpdump</find>
+      <find>rsyslog_cef_logs_received_in_correct_format</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -291,8 +291,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="935">
-          <caret line="65" column="100" selection-start-line="65" selection-start-column="100" selection-end-line="65" selection-end-column="100" />
+        <state relative-caret-position="391">
+          <caret line="175" column="88" lean-forward="true" selection-start-line="175" selection-start-column="23" selection-end-line="175" selection-end-column="88" />
           <folding>
             <element signature="e#26#36#0" expanded="true" />
           </folding>

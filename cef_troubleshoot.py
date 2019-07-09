@@ -116,13 +116,14 @@ def security_enhanced_linux_enabled():
 def security_enhanced_linux():
     if security_enhanced_linux_enabled() is True:
         print_warning("Security enhanced linux is enabled.\nTo use TCP with syslog daemon the omsagent incoming port should be inserted")
-        print("To enable the port")
-        print_notice("semanage port -a -t syslogd_port_t -p tcp " + agent_port)
-        print("To validate enabled port")
-        print_notice("semanage port -l | grep " + agent_port)
-        print("To install the policy editor")
-        print_notice("yum install policycoreutils-python")
-        print_warning("For more information: " + red_hat_rsyslog_security_enhanced_linux_documentation)
+        print("Use elevated privileges to perform the following:")
+        print("\tTo enable the port")
+        print_notice("\tsemanage port -a -t syslogd_port_t -p tcp " + agent_port)
+        print("\tTo validate enabled port")
+        print_notice("\tsemanage port -l | grep " + agent_port)
+        print("\tTo install the policy editor")
+        print_notice("\tyum install policycoreutils-python")
+        print("For more information: " + red_hat_rsyslog_security_enhanced_linux_documentation)
 
 
 def rsyslog_get_cef_log_counter():
@@ -172,8 +173,9 @@ def rsyslog_cef_logs_received_in_correct_format():
 
 def incoming_logs_validations(incoming_port, ok_message):
     print("Executing tcp dump on incoming port-" + incoming_port + " to validate arrival of CEF messages to daemon.")
-    tcp_dump = subprocess.Popen(["sudo", "tcpdump", "-A", "-ni", "any", "port", incoming_port, "-vv"],
-                                stdout=subprocess.PIPE)
+    command_tokens = ["sudo", "tcpdump", "-A", "-ni", "any", "port", incoming_port, "-vv"]
+    print_notice(" ".join(command_tokens))
+    tcp_dump = subprocess.Popen( command_tokens, stdout=subprocess.PIPE)
     for row in iter(tcp_dump.stdout.readline, b''):
         if "CEF" in row:
             print_ok(ok_message)
