@@ -114,7 +114,7 @@ def process_check(process_name):
     o, e = p2.communicate()
     tokens = o.decode('ascii').split('\n')
     tokens.remove('')
-    return tokens
+    return len(tokens)
 
 
 def create_daemon_forwarding_configuration(omsagent_incoming_port, daemon_configuration_path, daemon_name):
