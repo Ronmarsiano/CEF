@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="edc9c0a2-b854-489a-ab81-b23afdd1b3fb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/cef_installer.py" beforeDir="false" afterPath="$PROJECT_DIR$/cef_installer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cef_troubleshoot.py" beforeDir="false" afterPath="$PROJECT_DIR$/cef_troubleshoot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,8 +16,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cef_installer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="578">
-              <caret line="226" column="15" lean-forward="true" selection-start-line="226" selection-start-column="15" selection-end-line="226" selection-end-column="15" />
+            <state relative-caret-position="323">
+              <caret line="19" selection-start-line="19" selection-end-line="19" selection-end-column="195" />
               <folding>
                 <element signature="e#26#43#0" expanded="true" />
               </folding>
@@ -27,8 +28,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="765">
-              <caret line="59" column="118" selection-start-line="59" selection-start-column="86" selection-end-line="59" selection-end-column="118" />
+            <state relative-caret-position="357">
+              <caret line="399" column="15" selection-start-line="399" selection-start-column="15" selection-end-line="399" selection-end-column="15" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
               </folding>
@@ -78,13 +79,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>change_omsagent_protocol</find>
-      <find>set_omsagent_configuration</find>
-      <find>rsyslog_daemon_configuration_content</find>
-      <find>get_rsyslog_daemon_configuration_content</find>
-      <find>create_rsyslog_daemon_forwarding_configuration</find>
-      <find>rsyslog_daemon_configuration_path</find>
-      <find>syslogng_daemon_name</find>
       <find>restart_rsyslog</find>
       <find>syslog_log_dir</find>
       <find>change_omsagent_configuration_port</find>
@@ -99,15 +93,22 @@
       <find>syslog_ng_daemon_forwarding_configuration_path</find>
       <find>command_tokens</find>
       <find>printf</find>
-      <find>append</find>
       <find>rsyslog_red_hat_mod_load_udp</find>
       <find>rsyslog_red_hat_mod_load_tcp</find>
       <find>is_rsyslog_new_configuration</find>
       <find>set_rsyslog_new_configuration</find>
-      <find>append_content_to_file</find>
       <find>set_rsyslog_old_configuration</find>
       <find>set_rsyslog_configuration</find>
       <find>old con</find>
+      <find>append</find>
+      <find>append_content_to_file</find>
+      <find>restar</find>
+      <find>grep</find>
+      <find>p2</find>
+      <find>incoming port</find>
+      <find>incoming_logs_validations</find>
+      <find>25226</find>
+      <find>udp</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -120,8 +121,8 @@
         <option value="$PROJECT_DIR$/troubleshoot_cef.py" />
         <option value="$PROJECT_DIR$/installCef.py" />
         <option value="$PROJECT_DIR$/deprecated_troubleshoot_cef.py" />
-        <option value="$PROJECT_DIR$/cef_troubleshoot.py" />
         <option value="$PROJECT_DIR$/cef_installer.py" />
+        <option value="$PROJECT_DIR$/cef_troubleshoot.py" />
       </list>
     </option>
   </component>
@@ -300,8 +301,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_installer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="226" column="15" lean-forward="true" selection-start-line="226" selection-start-column="15" selection-end-line="226" selection-end-column="15" />
+        <state relative-caret-position="323">
+          <caret line="19" selection-start-line="19" selection-end-line="19" selection-end-column="195" />
           <folding>
             <element signature="e#26#43#0" expanded="true" />
           </folding>
@@ -310,8 +311,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="59" column="118" selection-start-line="59" selection-start-column="86" selection-end-line="59" selection-end-column="118" />
+        <state relative-caret-position="357">
+          <caret line="399" column="15" selection-start-line="399" selection-start-column="15" selection-end-line="399" selection-end-column="15" />
           <folding>
             <element signature="e#26#36#0" expanded="true" />
           </folding>

@@ -5,8 +5,8 @@ import sys
 
 rsyslog_daemon_name = "rsyslog"
 syslog_ng_daemon_name = "syslog-ng"
-oms_agent_file_name = "onboard_agent.sh"
-oms_agent_url = "https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/" + oms_agent_file_name
+omsagent_file_name = "onboard_agent.sh"
+oms_agent_url = "https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/" + omsagent_file_name
 help_text = "Optional arguments for the python script are:\n\t-T: for TCP\n\t-U: for UDP which is the default value.\n\t-F: for no facility restrictions.\n\t-p: for changing default port from 25226"
 omsagent_default_incoming_port = "25226"
 daemon_default_incoming_port = "514"
@@ -17,6 +17,8 @@ rsyslog_module_udp_content = "# provides UDP syslog reception\nmodule(load=\"imu
 rsyslog_module_tcp_content = "# provides TCP syslog reception\nmodule(load=\"imtcp\")\ninput(type=\"imtcp\" port=\"" + daemon_default_incoming_port + "\")\n"
 rsyslog_old_config_udp_content = "# provides UDP syslog reception\n$ModLoad imudp\n$UDPServerRun " + daemon_default_incoming_port + "\n"
 rsyslog_old_config_tcp_content = "# provides TCP syslog reception\n$ModLoad imtcp\n$InputTCPServerRun " + daemon_default_incoming_port + "\n"
+red_hat_rsyslog_security_enhanced_linux_documentation = "https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s1-configuring_rsyslog_on_a_logging_server"
+
 
 def print_error(input_str):
     '''
@@ -90,7 +92,7 @@ def install_omsagent(workspace_id, primary_key):
     :return:
     '''
     print("Installing omsagent")
-    command_tokens = ["sh", oms_agent_file_name, "-w", workspace_id, "-s", primary_key, "-d", "opinsights.azure.com"]
+    command_tokens = ["sh", omsagent_file_name, "-w", workspace_id, "-s", primary_key, "-d", "opinsights.azure.com"]
     print_notice(" ".join(command_tokens))
     install_omsagent_command = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     o, e = install_omsagent_command.communicate()
@@ -359,6 +361,31 @@ def get_daemon_configuration_content(daemon_name, omsagent_incoming_port):
         return False
 
 
+def security_enhanced_linux_enabled():
+    print("Checking if security enhanced linux is enabled")
+    print_notice("sestatus")
+    command_tokens = ["sestatus"]
+    sestatus_command = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
+    grep = subprocess.Popen(["grep", "-i", "SELinux status"], stdin=sestatus_command.stdout, stdout=subprocess.PIPE)
+    o, e = grep.communicate()
+    if e is not None:
+        handle_error(e, error_response_str="Could not execute \'sestatus\' to check if security enhanced linux is enabled")
+    else:
+        return "enabled" in o
+
+
+def security_enhanced_linux():
+    if security_enhanced_linux_enabled() is True:
+        print_error("Security enhanced linux is enabled.\nTo use TCP with syslog daemon the omsagent incoming port should be inserted")
+        print("To enable the port")
+        print_notice("semanage port -a -t syslogd_port_t -p tcp " + omsagent_default_incoming_port)
+        print("To validate enabled port")
+        print_notice("semanage port -l | grep " + omsagent_default_incoming_port)
+        print("To install the policy editor")
+        print_notice("yum install policycoreutils-python")
+        print_warning("For more information: " + red_hat_rsyslog_security_enhanced_linux_documentation)
+
+
 def get_rsyslog_daemon_configuration_content(omsagent_incoming_port):
     '''Rsyslog accept every message containing CEF'''
     rsyslog_daemon_configuration_content = ":msg, contains, \"CEF\"  ~\n*.* @@127.0.0.1:"
@@ -426,6 +453,7 @@ def main():
                                                daemon_configuration_path=rsyslog_daemon_forwarding_configuration_path,
                                                daemon_name=rsyslog_daemon_name)
         set_rsyslog_configuration()
+        security_enhanced_linux()
         restart_rsyslog()
     elif is_syslog_ng():
         print("Located syslog-ng daemon running on the machine")

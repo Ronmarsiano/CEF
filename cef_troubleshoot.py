@@ -11,8 +11,7 @@ oms_agent_configuration_content_tokens = [daemon_port, "127.0.0.1"]
 oms_agent_process_name = "opt/microsoft/omsagent"
 syslog_log_dir = ["/var/log/syslog", "/var/log/messages"]
 firewall_d_exception_configuration_file = "/etc/firewalld/zones/public.xml"
-udp = False
-tcp = False
+red_hat_rsyslog_security_enhanced_linux_documentation = "https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s1-configuring_rsyslog_on_a_logging_server"
 
 
 def print_error(input_str):
@@ -57,7 +56,7 @@ def check_red_hat_firewall_issue():
                 restart_red_hat_firewall_d()
             else:
                 print_warning("Warning: no exception found for omsagent in the firewall")
-                print_warning("You can disable your firewall by using this command: \'sudo systemctl disable firewalld\'")
+                print_warning("You can disable your firewall by using this command: \'sudo systemctl stop firewalld\'")
                 print_warning("You can add exception for the agent port["+agent_port+"] by using the following commands:")
                 print_warning("Add exception:  \n\t\'sudo firewall-cmd --permanent --zone=public --add-rich-rule=\' rule family=\"ipv4\" source address=\"127.0.0.1/32\" port protocol=\"tcp\" port=\"25226\" accept\'")
                 print_warning("Validate the exception was added in the configuration: \n\t\'sudo cat /etc/firewalld/zones/public.xml\'")
@@ -93,6 +92,31 @@ def restart_red_hat_firewall_d():
         print_error("Error: could not get /etc/firewalld/zones/public.xml file holding firewall exceptions.")
     else:
         print_ok("Ok: restarted firewalld.")
+
+
+def security_enhanced_linux_enabled():
+    print("Checking if security enhanced linux is enabled")
+    print_notice("sestatus")
+    command_tokens = ["sestatus"]
+    sestatus_command = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
+    grep = subprocess.Popen(["grep", "-i", "SELinux status"], stdin=sestatus_command.stdout, stdout=subprocess.PIPE)
+    o, e = grep.communicate()
+    if e is not None:
+        print_error("Could not execute \'sestatus\' to check if security enhanced linux is enabled")
+    else:
+        return "enabled" in o
+
+
+def security_enhanced_linux():
+    if security_enhanced_linux_enabled() is True:
+        print_error("Security enhanced linux is enabled.\nTo use TCP with syslog daemon the omsagent incoming port should be inserted")
+        print("To enable the port")
+        print_notice("semanage port -a -t syslogd_port_t -p tcp " + agent_port)
+        print("To validate enabled port")
+        print_notice("semanage port -l | grep " + agent_port)
+        print("To install the policy editor")
+        print_notice("yum install policycoreutils-python")
+        print_warning("For more information: " + red_hat_rsyslog_security_enhanced_linux_documentation)
 
 
 def rsyslog_get_cef_log_counter():
@@ -372,6 +396,8 @@ def restart_omsagent(workspace_id):
 
 
 def check_rsyslog_configuration():
+    udp = False
+    tcp = False
     if check_file_in_directory("rsyslog.conf", "/etc/"):
         content = open("/etc/rsyslog.conf").read()
         lines = content.split("\n")
