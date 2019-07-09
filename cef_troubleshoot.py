@@ -56,11 +56,15 @@ def check_red_hat_firewall_issue():
                 restart_red_hat_firewall_d()
             else:
                 print_warning("Warning: no exception found for omsagent in the firewall")
-                print_warning("You can disable your firewall by using this command: \'sudo systemctl stop firewalld\'")
                 print_warning("You can add exception for the agent port[" + agent_port + "] by using the following commands:")
-                print_warning("Add exception:  \n\t\'sudo firewall-cmd --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport " + agent_port + "  -j ACCEPT")
-                print_warning("Validate the exception was added in the configuration: \n\t\'sudo cat /etc/firewalld/zones/public.xml\'")
-                print_warning("Reload the firewall: \n\t\'sudo firewall-cmd --reload\'")
+                print_warning("Add exception:")
+                print_notice("sudo firewall-cmd --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport " + agent_port + "  -j ACCEPT")
+                print_warning("Validate the exception was added in the configuration:")
+                print_notice("sudo firewall-cmd --direct --get-rules ipv4 filter INPUT")
+                print_warning("Reload the firewall:")
+                print_notice("sudo firewall-cmd --reload")
+                print_warning("You can disable your firewall by using this command - not recommended:")
+                print_notice("sudo systemctl stop firewalld")
 
 
 def red_hat_firewall_d_exception_for_omsagent():
