@@ -536,5 +536,6 @@ def main():
     print_notice("Notice: If no logs appear in workspace:")
     print_notice("try looking at: \"tail -f /var/opt/microsoft/omsagent/" + workspace_id + "/log/omsagent.log\".")
 
+
 main()
 time.sleep(2)
