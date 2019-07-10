@@ -177,6 +177,12 @@ def rsyslog_cef_logs_received_in_correct_format():
 
 
 def incoming_logs_validations(incoming_port, ok_message):
+    '''
+    Validate that there is incoming traffic of CEF messages to the given port
+    :param incoming_port: port to validate
+    :param ok_message: message printed if found CEF messages
+    :return:
+    '''
     print("Executing tcp dump on incoming port-" + incoming_port + " to validate arrival of CEF messages to daemon.")
     print("This could take up to 20 seconds.")
     command_tokens = ["sudo", "tcpdump", "-A", "-ni", "any", "port", incoming_port, "-vv"]
@@ -190,6 +196,10 @@ def incoming_logs_validations(incoming_port, ok_message):
             tcp_dump.kill()
             time.sleep(1)
             return True
+        # Handle command not found
+        elif "command not found" in row:
+            print_error("Notice that \'tcpdump\' is not installed in your linux machine.\nWe cannot monitor traffic without it.\nPlease install \'tcpdump\'.")
+            return False
         else:
             # print the output
             print_command_response(row.rstrip())
