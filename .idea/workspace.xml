@@ -27,8 +27,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="901">
-              <caret line="429" selection-start-line="429" selection-end-line="429" />
+            <state relative-caret-position="510">
+              <caret line="237" column="8" selection-start-line="237" selection-start-column="8" selection-end-line="237" selection-end-column="8" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
               </folding>
@@ -59,9 +59,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>&quot;rsyslog.d&quot;</find>
-      <find>es not contain</find>
-      <find>syslog_ng_security_config_omsagent_conf_content_tokens</find>
       <find>check_token</find>
       <find>file_contains_string</find>
       <find>validate_daemon_configuration_content</find>
@@ -84,11 +81,14 @@
       <find>rsyslog_old_config_udp_content</find>
       <find>set_rsyslog_old_configuration</find>
       <find>set_rsyslog_configuration</find>
-      <find>source</find>
       <find>urity-config-omsage</find>
       <find>//</find>
       <find>s_src</find>
       <find>sleep</find>
+      <find>ll</find>
+      <find>grep</find>
+      <find>locate_check</find>
+      <find>source</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -107,10 +107,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1046" />
-    <option name="y" value="133" />
-    <option name="width" value="989" />
-    <option name="height" value="532" />
+    <option name="x" value="2552" />
+    <option name="y" value="-8" />
+    <option name="width" value="2576" />
+    <option name="height" value="1416" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -212,7 +212,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
+    <frame x="2552" y="-8" width="2576" height="1416" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.16908851" />
@@ -239,7 +239,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/cef_troubleshoot.py</url>
-          <line>525</line>
+          <line>526</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
@@ -300,10 +300,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/typeshed/stdlib/3/subprocess.pyi">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="748">
+          <caret line="46" column="77" lean-forward="true" selection-start-line="46" selection-start-column="77" selection-end-line="46" selection-end-column="77" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="901">
-          <caret line="429" selection-start-line="429" selection-end-line="429" />
+        <state relative-caret-position="510">
+          <caret line="237" column="8" selection-start-line="237" selection-start-column="8" selection-end-line="237" selection-end-column="8" />
           <folding>
             <element signature="e#26#36#0" expanded="true" />
           </folding>

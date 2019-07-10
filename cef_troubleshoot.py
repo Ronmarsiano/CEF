@@ -234,20 +234,25 @@ def locate_check(process_name):
     :param process_name:onfiguration under the nam
     :return: True if locate has returned a valid value else False
     '''
-    print("Trying to use the \'locate\' command to locate " + process_name)
-    locate = subprocess.Popen(["locate", process_name], stdout=subprocess.PIPE)
-    o, e = locate.communicate()
-    response = o.decode('ascii')
-    if e is not None:
+    try:
+        print("Trying to use the \'locate\' command to locate " + process_name)
+        locate = subprocess.Popen(["locate", process_name], stdout=subprocess.PIPE)
+        o, e = locate.communicate()
+        response = o.decode('ascii')
+        if e is not None:
+            print_warning("Warning: Could not execute \'locate\' command.")
+            print_notice("Notice: To install locate command - \"sudo yum install mlocate[On CentOS/RHEL]\" or \"sudo apt"
+                  " install mlocate[On Debian/Ubuntu] \"")
+        elif response == "":
+            print_error("Error: Could not locate \'omsagent\' trying to validate by checking the process.\n")
+            return False
+        else:
+            print_ok("Located \'omsagent\'")
+            return True
+    except OSError:
         print_warning("Warning: Could not execute \'locate\' command.")
         print_notice("Notice: To install locate command - \"sudo yum install mlocate[On CentOS/RHEL]\" or \"sudo apt"
-              " install mlocate[On Debian/Ubuntu] \"")
-    elif response == "":
-        print_error("Error: Could not locate \'omsagent\' trying to validate by checking the process.\n")
-        return False
-    else:
-        print_ok("Located \'omsagent\'")
-        return True
+                     " install mlocate[On Debian/Ubuntu] \"")
 
 
 def omsagent_process_check(oms_process_name):
