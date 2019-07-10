@@ -421,14 +421,12 @@ def check_rsyslog_configuration():
             if "imudp" in line or "DPServerRun" in line:
                 if "#" in line:
                     udp = False
-
                 else:
                     udp = True
             # second part is for red hat [InputTCPServerRun]
             if "imtcp" in line or "InputTCPServerRun" in line:
                 if "#" in line:
                     tcp = False
-
                 else:
                     tcp = True
         if not udp:
