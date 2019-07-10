@@ -19,6 +19,7 @@ syslog_ng_daemon_forwarding_configuration_dir_path = "/etc/syslog-ng/conf.d/"
 rsyslog_daemon_name = "rsyslog.d"
 syslog_ng_default_config_path = "/etc/syslog-ng/syslog-ng.conf"
 
+
 def print_error(input_str):
     print("\033[1;31;40m" + input_str + "\033[0m")
 
@@ -469,10 +470,6 @@ def handle_syslog_ng(workspace_id):
             time.sleep(1)
             incoming_logs_validations(agent_port,
                                       "Ok - received CEF message in agent incoming port.[" + agent_port + "]")
-            print("Completed troubleshooting.")
-            print("Please check Log Analytics to see if your logs are arriving. All events streamed from these appliances appear in raw form in Log Analytics under CommonSecurityLog type")
-            print_notice("Notice: If no logs appear in workspace:")
-            print_notice("try looking at: \"tail /var/opt/microsoft/omsagent/" + workspace_id + "/log/omsagent.log\".")
         else:
             print_error("Error: syslog-ng daemon configuration was found invalid.")
             print_notice("Notice: please make sure:")
@@ -509,13 +506,10 @@ def handle_rsyslog(workspace_id):
         if check_rsyslog_configuration():
             incoming_logs_validations(agent_port, "Ok - received CEF message in agent incoming port.["+agent_port+"]")
             time.sleep(1)
-            print("Completed troubleshooting.")
-            print("Please check Log Analytics to see if your logs are arriving. All events streamed from these appliances appear in raw form in Log Analytics under CommonSecurityLog type")
-            print_notice("Notice: If no logs appear in workspace:")
-            print_notice("try looking at: \"tail /var/opt/microsoft/omsagent/" + workspace_id + "/log/omsagent.log\".")
 
 
 def main():
+    print_notice("Note this script should be run in elevated privileges")
     if len(sys.argv) != 2:
         print_error("Error: The installation script is expecting 1 arguments:")
         print_error("\t1) workspace id")
@@ -536,7 +530,11 @@ def main():
         handle_rsyslog(workspace_id)
     elif check_daemon("syslog-ng"):
         handle_syslog_ng(workspace_id)
-
+    print("Completed troubleshooting.")
+    print(
+        "Please check Log Analytics to see if your logs are arriving. All events streamed from these appliances appear in raw form in Log Analytics under CommonSecurityLog type")
+    print_notice("Notice: If no logs appear in workspace:")
+    print_notice("try looking at: \"tail -f /var/opt/microsoft/omsagent/" + workspace_id + "/log/omsagent.log\".")
 
 main()
 time.sleep(2)

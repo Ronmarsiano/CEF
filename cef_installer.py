@@ -396,6 +396,11 @@ def is_syslog_ng():
 
 
 def set_syslog_ng_configuration():
+    '''
+    syslog ng have a default configuration which enables the incoming ports and define
+    the source pipe to the daemon this will verify it is configured correctly
+    :return:
+    '''
     comment_line = False
     snet_found = False
     with open(syslog_ng_conf_path, "rt") as fin:
@@ -468,6 +473,7 @@ def main():
         set_syslog_ng_configuration()
         restart_syslog_ng()
     restart_omsagent(workspace_id=workspace_id)
+    print_ok("Installation completed")
 
 
 main()
