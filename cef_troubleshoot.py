@@ -6,7 +6,7 @@ import time
 daemon_port = "514"
 agent_port = "25226"
 rsyslog_security_config_omsagent_conf_content_tokens = ["local4.|*.", "debug|*", "@127.0.0.1:25226"]
-syslog_ng_security_config_omsagent_conf_content_tokens = ["f_oms_filter", "oms_destination", "port(25226)", "filter(f_oms_filter)", "port(514)", "tcp", "udp", "source", "s_src", "oms_destination"]
+syslog_ng_security_config_omsagent_conf_content_tokens = ["f_oms_filter", "oms_destination", "port(25226)", "tcp", "source", "s_src", "oms_destination"]
 oms_agent_configuration_content_tokens = [daemon_port, "127.0.0.1"]
 oms_agent_process_name = "opt/microsoft/omsagent"
 syslog_log_dir = ["/var/log/syslog", "/var/log/messages"]
@@ -178,6 +178,7 @@ def rsyslog_cef_logs_received_in_correct_format():
 
 def incoming_logs_validations(incoming_port, ok_message):
     print("Executing tcp dump on incoming port-" + incoming_port + " to validate arrival of CEF messages to daemon.")
+    print("This could take up to 20 seconds.")
     command_tokens = ["sudo", "tcpdump", "-A", "-ni", "any", "port", incoming_port, "-vv"]
     print_notice(" ".join(command_tokens))
     tcp_dump = subprocess.Popen( command_tokens, stdout=subprocess.PIPE)
@@ -392,8 +393,8 @@ def restart_daemon(daemon_name):
         return
     else:
         print_ok("" + daemon_name + " daemon restarted.")
-        print("This will take 5 seconds.")
-        time.sleep(5)
+        print("This will take a few seconds.")
+        time.sleep(8)
 
 
 def restart_omsagent(workspace_id):
@@ -404,8 +405,8 @@ def restart_omsagent(workspace_id):
         return
     else:
         print_ok("Omsagent restarted.")
-        print("This will take 5 seconds.")
-        time.sleep(5)
+        print("This will take a few seconds.")
+        time.sleep(8)
 
 
 def check_rsyslog_configuration():
@@ -462,8 +463,7 @@ def handle_syslog_ng(workspace_id):
         else:
             print_error("Error: syslog-ng daemon configuration was found invalid.")
             print_notice("Notice: please make sure:")
-            print_notice("\t1. /etc/syslog-ng/security-config-omsagent.conf file exists")
-            print_notice("\t2. File contains the following content: \"filter f_local4_oms { facility(local4); };\n destination security_oms { tcp(\"127.0.0.1\" port(" + agent_port + ")); };\n log { source(src); filter(f_local4_oms); destination(security_oms); };\"")
+            print_notice("\t/etc/syslog-ng/conf.d/security-config-omsagent.conf file exists")
 
 
 def handle_rsyslog(workspace_id):
