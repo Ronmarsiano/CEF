@@ -329,7 +329,7 @@ def test_daemon_configuration(daemon_name):
         return False
     print_ok("Located /etc/" + daemon_name + " directory.")
     print("Checking omsagent configuration under the name of: \'security-config-omsagent.conf\'")
-    config_exists = check_file_in_directory("security-config-omsagent.conf", rsyslog_daemon_forwarding_configuration_dir_path if daemon_name is rsyslog_daemon_name else syslog_ng_daemon_forwarding_configuration_dir_path)
+    config_exists = check_file_in_directory("security-config-omsagent.conf", rsyslog_daemon_forwarding_configuration_dir_path if daemon_name == rsyslog_daemon_name else syslog_ng_daemon_forwarding_configuration_dir_path)
     if not config_exists:
         print_error("security-config-omsagent.conf does not exists in " + daemon_name + " directory")
         return False
@@ -341,7 +341,7 @@ def test_daemon_configuration(daemon_name):
 def validate_daemon_configuration_content(daemon_name, valid_content_tokens_arr):
     print("Trying to validate the content of daemon configuration.")
     print_notice("For extra verification please make sure the configuration content is as defined in the documentation.")
-    if not file_contains_string(valid_content_tokens_arr, rsyslog_daemon_forwarding_configuration_path if daemon_name is rsyslog_daemon_name else syslog_ng_daemon_forwarding_configuration_path):
+    if not file_contains_string(valid_content_tokens_arr, rsyslog_daemon_forwarding_configuration_path if daemon_name == rsyslog_daemon_name else syslog_ng_daemon_forwarding_configuration_path):
         print_error("Error - security-config-omsagent.conf does not contain " + daemon_name + " daemon routing to oms-agent")
         print("\tSecurity-config-omsagent.conf should contain the following tokens: \n" + valid_content_tokens_arr)
         return False
