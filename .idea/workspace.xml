@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="edc9c0a2-b854-489a-ab81-b23afdd1b3fb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/cef_troubleshoot.py" beforeDir="false" afterPath="$PROJECT_DIR$/cef_troubleshoot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cef_installer.py" beforeDir="false" afterPath="$PROJECT_DIR$/cef_installer.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,11 +12,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_installer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="987">
-              <caret line="467" column="37" selection-start-line="467" selection-start-column="37" selection-end-line="467" selection-end-column="37" />
+            <state relative-caret-position="391">
+              <caret line="374" column="28" selection-start-line="374" selection-start-column="28" selection-end-line="374" selection-end-column="28" />
               <folding>
                 <element signature="e#26#43#0" expanded="true" />
               </folding>
@@ -24,11 +24,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="332" column="133" selection-start-line="332" selection-start-column="133" selection-end-line="332" selection-end-column="133" />
+            <state relative-caret-position="341">
+              <caret line="457" column="110" lean-forward="true" selection-end-line="529" selection-end-column="13" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
               </folding>
@@ -101,8 +101,8 @@
         <option value="$PROJECT_DIR$/troubleshoot_cef.py" />
         <option value="$PROJECT_DIR$/installCef.py" />
         <option value="$PROJECT_DIR$/deprecated_troubleshoot_cef.py" />
-        <option value="$PROJECT_DIR$/cef_installer.py" />
         <option value="$PROJECT_DIR$/cef_troubleshoot.py" />
+        <option value="$PROJECT_DIR$/cef_installer.py" />
       </list>
     </option>
   </component>
@@ -239,7 +239,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/cef_troubleshoot.py</url>
-          <line>529</line>
+          <line>528</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
@@ -280,16 +280,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cef_installer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="987">
-          <caret line="467" column="37" selection-start-line="467" selection-start-column="37" selection-end-line="467" selection-end-column="37" />
-          <folding>
-            <element signature="e#26#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cefInjector.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -302,10 +292,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="332" column="133" selection-start-line="332" selection-start-column="133" selection-end-line="332" selection-end-column="133" />
+        <state relative-caret-position="341">
+          <caret line="457" column="110" lean-forward="true" selection-end-line="529" selection-end-column="13" />
           <folding>
             <element signature="e#26#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cef_installer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="374" column="28" selection-start-line="374" selection-start-column="28" selection-end-line="374" selection-end-column="28" />
+          <folding>
+            <element signature="e#26#43#0" expanded="true" />
           </folding>
         </state>
       </provider>
