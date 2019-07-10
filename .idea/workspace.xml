@@ -16,7 +16,7 @@
         <entry file="file://$PROJECT_DIR$/cef_installer.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="391">
-              <caret line="374" column="28" selection-start-line="374" selection-start-column="28" selection-end-line="374" selection-end-column="28" />
+              <caret line="423" column="52" selection-start-line="423" selection-start-column="46" selection-end-line="423" selection-end-column="52" />
               <folding>
                 <element signature="e#26#43#0" expanded="true" />
               </folding>
@@ -82,13 +82,13 @@
       <find>content</find>
       <find>any</find>
       <find>source(</find>
-      <find>source</find>
       <find>set_syslog_ng_configuration</find>
       <find>rsyslog_module_udp_content</find>
       <find>rsyslog_module_tcp_content</find>
       <find>rsyslog_old_config_udp_content</find>
       <find>set_rsyslog_old_configuration</find>
       <find>set_rsyslog_configuration</find>
+      <find>source</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -303,7 +303,7 @@
     <entry file="file://$PROJECT_DIR$/cef_installer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
-          <caret line="374" column="28" selection-start-line="374" selection-start-column="28" selection-end-line="374" selection-end-column="28" />
+          <caret line="423" column="52" selection-start-line="423" selection-start-column="46" selection-end-line="423" selection-end-column="52" />
           <folding>
             <element signature="e#26#43#0" expanded="true" />
           </folding>

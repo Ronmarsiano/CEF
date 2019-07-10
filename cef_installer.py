@@ -12,7 +12,7 @@ omsagent_default_incoming_port = "25226"
 daemon_default_incoming_port = "514"
 rsyslog_daemon_forwarding_configuration_path = "/etc/rsyslog.d/security-config-omsagent.conf"
 syslog_ng_daemon_forwarding_configuration_path = "/etc/syslog-ng/conf.d/security-config-omsagent.conf"
-syslog_ng_source_content = "source s_net { udp( port(514)); tcp( port(514));};"
+syslog_ng_source_content = "source s_src { udp( port(514)); tcp( port(514));};"
 rsyslog_conf_path = "/etc/rsyslog.conf"
 syslog_ng_conf_path = "/etc/syslog-ng/syslog-ng.conf"
 rsyslog_module_udp_content = "# provides UDP syslog reception\nmodule(load=\"imudp\")\ninput(type=\"imudp\" port=\"" + daemon_default_incoming_port + "\")\n"
@@ -372,7 +372,7 @@ def get_rsyslog_daemon_configuration_content(omsagent_incoming_port):
 def get_syslog_ng_damon_configuration_content(omsagent_incoming_port):
     oms_filter = "filter f_oms_filter {match(\"CEF\" value(\"MESSAGE\"));};\n"
     oms_destination = "destination oms_destination {tcp(\"127.0.0.1\" port(" + omsagent_incoming_port + "));};\n"
-    log = "log {source(s_net);filter(f_oms_filter);destination(oms_destination);};\n"
+    log = "log {source(s_src);filter(f_oms_filter);destination(oms_destination);};\n"
     content = oms_filter + oms_destination + log
     print("Syslog-ng configuration for forwarding CEF messages to omsagent content is:")
     print_command_response(content)
