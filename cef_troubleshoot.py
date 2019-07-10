@@ -6,13 +6,18 @@ import time
 daemon_port = "514"
 agent_port = "25226"
 rsyslog_security_config_omsagent_conf_content_tokens = ["local4.|*.", "debug|*", "@127.0.0.1:25226"]
-syslog_ng_security_config_omsagent_conf_content_tokens = ["f_local4_oms", "facility(local4)", "tcp(\"127.0.0.1\"", "port(25226)", "filter(f_local4_oms)", "destination(security_oms)"]
+syslog_ng_security_config_omsagent_conf_content_tokens = ["f_oms_filter", "oms_destination", "port(25226)", "filter(f_oms_filter)", "port(514)", "tcp", "udp", "source", "oms_source", "oms_destination"]
 oms_agent_configuration_content_tokens = [daemon_port, "127.0.0.1"]
 oms_agent_process_name = "opt/microsoft/omsagent"
 syslog_log_dir = ["/var/log/syslog", "/var/log/messages"]
 firewall_d_exception_configuration_file = "/etc/firewalld/zones/public.xml"
 red_hat_rsyslog_security_enhanced_linux_documentation = "https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s1-configuring_rsyslog_on_a_logging_server"
-
+rsyslog_daemon_forwarding_configuration_path = "/etc/rsyslog.d/security-config-omsagent.conf"
+syslog_ng_daemon_forwarding_configuration_path = "/etc/syslog-ng/conf.d/security-config-omsagent.conf"
+rsyslog_daemon_forwarding_configuration_dir_path = "/etc/rsyslog.d/"
+syslog_ng_daemon_forwarding_configuration_dir_path = "/etc/syslog-ng/conf.d/"
+rsyslog_daemon_name = "rsyslog.d"
+syslog_ng_default_config_path = "/etc/syslog-ng/syslog-ng.conf"
 
 def print_error(input_str):
     print("\033[1;31;40m" + input_str + "\033[0m")
@@ -101,7 +106,7 @@ def restart_red_hat_firewall_d():
 def security_enhanced_linux_enabled():
     print("Checking if security enhanced linux is enabled")
     print_notice("sestatus")
-    command_tokens = ["sestatus"]
+    command_tokens = ["sudo", "sestatus"]
     sestatus_command = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     o, e = sestatus_command.communicate()
     if e is not None:
@@ -324,7 +329,7 @@ def test_daemon_configuration(daemon_name):
         return False
     print_ok("Located /etc/" + daemon_name + " directory.")
     print("Checking omsagent configuration under the name of: \'security-config-omsagent.conf\'")
-    config_exists = check_file_in_directory("security-config-omsagent.conf", "/etc/" + daemon_name + "/")
+    config_exists = check_file_in_directory("security-config-omsagent.conf", rsyslog_daemon_forwarding_configuration_dir_path if daemon_name is rsyslog_daemon_name else syslog_ng_daemon_forwarding_configuration_dir_path)
     if not config_exists:
         print_error("security-config-omsagent.conf does not exists in " + daemon_name + " directory")
         return False
@@ -336,7 +341,7 @@ def test_daemon_configuration(daemon_name):
 def validate_daemon_configuration_content(daemon_name, valid_content_tokens_arr):
     print("Trying to validate the content of daemon configuration.")
     print_notice("For extra verification please make sure the configuration content is as defined in the documentation.")
-    if not file_contains_string(valid_content_tokens_arr, "/etc/" + daemon_name if daemon_name is "rsyslog.d" else (daemon_name + "/conf.d") + "/security-config-omsagent.conf"):
+    if not file_contains_string(valid_content_tokens_arr, rsyslog_daemon_forwarding_configuration_path if daemon_name is rsyslog_daemon_name else syslog_ng_daemon_forwarding_configuration_path):
         print_error("Error - security-config-omsagent.conf does not contain " + daemon_name + " daemon routing to oms-agent")
         print("\tSecurity-config-omsagent.conf should contain the following tokens: \n" + valid_content_tokens_arr)
         return False
@@ -367,6 +372,7 @@ def omsagent_security_event_conf_validation(workspace_id):
 
 def check_daemon(daemon_name):
     tokens = process_check(daemon_name)
+    print(tokens)
     if len(tokens) > 1:
         for single_token in tokens:
             if "/usr/sbin/" + daemon_name in single_token:
@@ -374,7 +380,7 @@ def check_daemon(daemon_name):
                 return True
     elif check_file_in_directory(daemon_name, "/etc/"):
         print_notice("Notice: " + daemon_name + " is not running but found configuration directory for it.")
-        return True
+        return False
     return False
 
 
@@ -433,7 +439,7 @@ def check_rsyslog_configuration():
 
 
 def handle_syslog_ng(workspace_id):
-    print("\tChecking syslog-ng:")
+    print("Checking syslog-ng:")
     if test_daemon_configuration("syslog-ng"):
         daemon_config_valid = validate_daemon_configuration_content("syslog-ng",
                                                                     syslog_ng_security_config_omsagent_conf_content_tokens)
@@ -448,6 +454,12 @@ def handle_syslog_ng(workspace_id):
             time.sleep(1)
             incoming_logs_validations(daemon_port, "Ok - received CEF message in daemon incoming port.["+daemon_port+"]")
             time.sleep(1)
+            incoming_logs_validations(agent_port,
+                                      "Ok - received CEF message in agent incoming port.[" + agent_port + "]")
+            print("Completed troubleshooting.")
+            print("Please check Log Analytics to see if your logs are arriving. All events streamed from these appliances appear in raw form in Log Analytics under CommonSecurityLog type")
+            print_notice("Notice: If no logs appear in workspace:")
+            print_notice("try looking at: \"tail /var/opt/microsoft/omsagent/" + workspace_id + "/log/omsagent.log\".")
         else:
             print_error("Error: syslog-ng daemon configuration was found invalid.")
             print_notice("Notice: please make sure:")

@@ -12,7 +12,9 @@ omsagent_default_incoming_port = "25226"
 daemon_default_incoming_port = "514"
 rsyslog_daemon_forwarding_configuration_path = "/etc/rsyslog.d/security-config-omsagent.conf"
 syslog_ng_daemon_forwarding_configuration_path = "/etc/syslog-ng/conf.d/security-config-omsagent.conf"
+syslog_ng_source_content = "source s_net { udp( port(514)); tcp( port(514));};"
 rsyslog_conf_path = "/etc/rsyslog.conf"
+syslog_ng_conf_path = "/etc/syslog-ng/syslog-ng.conf"
 rsyslog_module_udp_content = "# provides UDP syslog reception\nmodule(load=\"imudp\")\ninput(type=\"imudp\" port=\"" + daemon_default_incoming_port + "\")\n"
 rsyslog_module_tcp_content = "# provides TCP syslog reception\nmodule(load=\"imtcp\")\ninput(type=\"imtcp\" port=\"" + daemon_default_incoming_port + "\")\n"
 rsyslog_old_config_udp_content = "# provides UDP syslog reception\n$ModLoad imudp\n$UDPServerRun " + daemon_default_incoming_port + "\n"
@@ -368,11 +370,10 @@ def get_rsyslog_daemon_configuration_content(omsagent_incoming_port):
 
 
 def get_syslog_ng_damon_configuration_content(omsagent_incoming_port):
-    oms_source = "source oms_source { udp( port(" + daemon_default_incoming_port + ")); tcp( port(" + daemon_default_incoming_port + "));};\n"
     oms_filter = "filter f_oms_filter {match(\"CEF\" value(\"MESSAGE\"));};\n"
     oms_destination = "destination oms_destination {tcp(\"127.0.0.1\" port(" + omsagent_incoming_port + "));};\n"
     log = "log {source(oms_source);filter(f_oms_filter);destination(oms_destination);};\n"
-    content = oms_source + oms_filter + oms_destination + log
+    content = oms_filter + oms_destination + log
     print("Syslog-ng configuration for forwarding CEF messages to omsagent content is:")
     print_command_response(content)
     return content
@@ -392,6 +393,37 @@ def is_syslog_ng():
     '''
     # Meaning ps -ef | grep "daemon name" has returned more then the grep result
     return process_check(syslog_ng_daemon_name) > 1
+
+
+def set_syslog_ng_configuration():
+    comment_line = False
+    snet_found = False
+    with open(syslog_ng_conf_path, "rt") as fin:
+        with open("tmp.txt", "wt") as fout:
+            for line in fin:
+                # fount snet
+                if "s_net" in line and not "#":
+                    snet_found = True
+                # found source that is not s_net - should remove it
+                elif "source" in line and "#" not in line and "s_net" not in line and "log" not in line:
+                    comment_line = True
+                # if starting a new definition stop commenting
+                elif comment_line is True and "#" not in line and ("source" in line or "destination" in line or "filter" in line or "log" in line):
+                    # stop commenting out
+                    comment_line = False
+                # write line correctly
+                fout.write(line if not comment_line else ("#" + line))
+    command_tokens = ["sudo", "mv", "tmp.txt", syslog_ng_conf_path]
+    write_new_content = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
+    time.sleep(3)
+    o, e = write_new_content.communicate()
+    if e is not None:
+        handle_error(e, error_response_str="Error: could not change Rsyslog.conf configuration  in -" + syslog_ng_conf_path)
+        return False
+    if not snet_found:
+        append_content_to_file(line=syslog_ng_source_content, file_path=syslog_ng_conf_path)
+    print_ok("Rsyslog.conf configuration was changed to fit required protocol - " + syslog_ng_conf_path)
+    return True
 
 
 def main():
@@ -433,6 +465,7 @@ def main():
         create_daemon_forwarding_configuration(omsagent_incoming_port=omsagent_incoming_port,
                                                daemon_configuration_path=syslog_ng_daemon_forwarding_configuration_path,
                                                daemon_name=syslog_ng_daemon_name)
+        set_syslog_ng_configuration()
         restart_syslog_ng()
     restart_omsagent(workspace_id=workspace_id)
 

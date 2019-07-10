@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="edc9c0a2-b854-489a-ab81-b23afdd1b3fb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cef_installer.py" beforeDir="false" afterPath="$PROJECT_DIR$/cef_installer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cef_troubleshoot.py" beforeDir="false" afterPath="$PROJECT_DIR$/cef_troubleshoot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,8 +17,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_installer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="396" column="11" lean-forward="true" selection-start-line="396" selection-start-column="11" selection-end-line="396" selection-end-column="11" />
+            <state relative-caret-position="391">
+              <caret line="235" column="4" selection-start-line="235" selection-start-column="4" selection-end-line="235" selection-end-column="4" />
               <folding>
                 <element signature="e#26#43#0" expanded="true" />
               </folding>
@@ -27,8 +29,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="338" column="23" selection-start-line="338" selection-start-column="23" selection-end-line="338" selection-end-column="23" />
+            <state relative-caret-position="8959">
+              <caret line="529" column="13" selection-start-line="529" selection-start-column="13" selection-end-line="529" selection-end-column="13" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
               </folding>
@@ -59,36 +61,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>is_rsyslog_new_configuration</find>
-      <find>set_rsyslog_new_configuration</find>
-      <find>set_rsyslog_old_configuration</find>
-      <find>set_rsyslog_configuration</find>
-      <find>old con</find>
-      <find>append</find>
-      <find>append_content_to_file</find>
-      <find>restar</find>
-      <find>grep</find>
-      <find>p2</find>
-      <find>incoming port</find>
-      <find>incoming_logs_validations</find>
-      <find>25226</find>
-      <find>udp</find>
-      <find>security_enh</find>
-      <find>security</find>
-      <find>security_enhanced_linux</find>
-      <find>red_hat_rsyslog_security_enhanced_linux_documentation</find>
-      <find>firewal</find>
-      <find>ld config</find>
-      <find>firewall</find>
-      <find>split</find>
-      <find>command</find>
-      <find>command_tok</find>
       <find>join</find>
       <find>tcpdump</find>
       <find>rsyslog_cef_logs_received_in_correct_format</find>
+      <find>is_rsy</find>
+      <find>&quot;rsyslog.d&quot;</find>
+      <find>es not contain</find>
+      <find>syslog_ng_security_config_omsagent_conf_content_tokens</find>
+      <find>check_token</find>
+      <find>file_contains_string</find>
       <find>validate_daemon_configuration_content</find>
+      <find>handle_syslog_ng</find>
+      <find>34347834787834873487437437878</find>
+      <find>Checking syslog-ng</find>
       <find>syslog_ng</find>
+      <find>for</find>
+      <find>for line</find>
       <find>get_syslog_ng_damon_configuration_content</find>
+      <find>get_daemon_configuration_content</find>
+      <find>create_daemon_forwarding_configuration</find>
+      <find>for li</find>
+      <find>content</find>
+      <find>any</find>
+      <find>source(</find>
+      <find>source</find>
+      <find>set_syslog_ng_configuration</find>
+      <find>rsyslog_module_udp_content</find>
+      <find>rsyslog_module_tcp_content</find>
+      <find>rsyslog_old_config_udp_content</find>
+      <find>set_rsyslog_old_configuration</find>
+      <find>set_rsyslog_configuration</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -107,8 +109,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="3209" />
-    <option name="y" value="144" />
+    <option name="x" value="2917" />
+    <option name="y" value="194" />
     <option name="width" value="989" />
     <option name="height" value="532" />
   </component>
@@ -234,6 +236,17 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/cef_troubleshoot.py</url>
+          <line>528</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_bundle/pydev_monkey.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -269,32 +282,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cefInjector.py">
+    <entry file="file://$PROJECT_DIR$/cef_installer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-column="25" />
+        <state relative-caret-position="391">
+          <caret line="235" column="4" selection-start-line="235" selection-start-column="4" selection-end-line="235" selection-end-column="4" />
           <folding>
-            <element signature="e#26#36#0" expanded="true" />
+            <element signature="e#26#43#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="338" column="23" selection-start-line="338" selection-start-column="23" selection-end-line="338" selection-end-column="23" />
+        <state relative-caret-position="8959">
+          <caret line="529" column="13" selection-start-line="529" selection-start-column="13" selection-end-line="529" selection-end-column="13" />
           <folding>
             <element signature="e#26#36#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cef_installer.py">
+    <entry file="file://$PROJECT_DIR$/cefInjector.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="396" column="11" lean-forward="true" selection-start-line="396" selection-start-column="11" selection-end-line="396" selection-end-column="11" />
+        <state>
+          <caret selection-end-column="25" />
           <folding>
-            <element signature="e#26#43#0" expanded="true" />
+            <element signature="e#26#36#0" expanded="true" />
           </folding>
         </state>
       </provider>
