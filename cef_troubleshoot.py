@@ -6,7 +6,7 @@ import time
 daemon_port = "514"
 agent_port = "25226"
 rsyslog_security_config_omsagent_conf_content_tokens = ["local4.|*.", "debug|*", "@127.0.0.1:25226"]
-syslog_ng_security_config_omsagent_conf_content_tokens = ["f_oms_filter", "oms_destination", "port(25226)", "filter(f_oms_filter)", "port(514)", "tcp", "udp", "source", "oms_source", "oms_destination"]
+syslog_ng_security_config_omsagent_conf_content_tokens = ["f_oms_filter", "oms_destination", "port(25226)", "filter(f_oms_filter)", "port(514)", "tcp", "udp", "source", "s_src", "oms_destination"]
 oms_agent_configuration_content_tokens = [daemon_port, "127.0.0.1"]
 oms_agent_process_name = "opt/microsoft/omsagent"
 syslog_log_dir = ["/var/log/syslog", "/var/log/messages"]
@@ -343,7 +343,6 @@ def validate_daemon_configuration_content(daemon_name, valid_content_tokens_arr)
     print_notice("For extra verification please make sure the configuration content is as defined in the documentation.")
     if not file_contains_string(valid_content_tokens_arr, rsyslog_daemon_forwarding_configuration_path if daemon_name == rsyslog_daemon_name else syslog_ng_daemon_forwarding_configuration_path):
         print_error("Error - security-config-omsagent.conf does not contain " + daemon_name + " daemon routing to oms-agent")
-        print("\tSecurity-config-omsagent.conf should contain the following tokens: \n" + valid_content_tokens_arr)
         return False
     else:
         print_ok("Security-config-omsagent.conf contains " + daemon_name + " routing configuration")
