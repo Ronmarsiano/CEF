@@ -87,7 +87,7 @@ def main():
         messages_per_second = sys.argv[3]
         amount_of_seconds = sys.argv[4]
         test_index = sys.argv[5]
-        if len(sys.argv) >= 6:
+        if len(sys.argv) >= 7:
             rfc_5424 = sys.argv[6]
         else:
             rfc_5424 = False
