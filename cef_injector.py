@@ -6,7 +6,7 @@ import random
 
 
 fixed_message_p1 = "0|Test "
-fixed_message_p2 = "|PAN-OS|cef-test|end|TRAFFIC|1|rt=$cefformatted-receive_time deviceExternalId=0002D01655 src=1.1.1.1 dst=2.2.2.2 sourceTranslatedAddress=1.1.1.1 destinationTranslatedAddress=3.3.3.3 cs1Label=Rule cs1=InternetDNS "
+fixed_message_p2 = "|PAN-OS|common=event-format-test|end|TRAFFIC|1|rt=$common=event-formatformatted-receive_time deviceExternalId=0002D01655 src=1.1.1.1 dst=2.2.2.2 sourceTranslatedAddress=1.1.1.1 destinationTranslatedAddress=3.3.3.3 cs1Label=Rule cs1=InternetDNS "
 
 
 def send_cef_message_remote(ip, port, start_millis, message_to_send, rfc5424):
@@ -14,6 +14,7 @@ def send_cef_message_remote(ip, port, start_millis, message_to_send, rfc5424):
     if rfc5424 is False:
         command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:", message, "-P", str(port), "-d", "-n", str(ip)]
     else:
+        print("rfc")
         command_tokens = ["logger","--rfc5424", "-p",  "local4.warn", "-t", "CEF:", message, "-P", str(port), "-d", "-n", str(ip)]
     logger = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     o, e = logger.communicate()
@@ -88,7 +89,7 @@ def main():
         amount_of_seconds = sys.argv[4]
         test_index = sys.argv[5]
         if len(sys.argv) >= 7:
-            rfc_5424 = sys.argv[6]
+            rfc_5424 = True
         else:
             rfc_5424 = False
         message_to_send = fixed_message_p1 + test_index + fixed_message_p2
