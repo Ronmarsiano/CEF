@@ -37,10 +37,10 @@ def send_cef_message_local(port, start_millis, message_to_send, rfc5424):
         print("Error could not send cef message")
 
 
-def stream_message(ip, port, message_per_second, time_in_second, rfc_5424):
+def stream_message(ip, port, message_per_second, time_in_second, message_to_send, rfc_5424):
     for curr_second in range(0, int(time_in_second)):
         start_millis = int(round(time.time() * 1000))
-        print("Message per second: "+ str(message_per_second))
+        print("Message per second: " + str(message_per_second))
         for curr_message in range(0, int(message_per_second)):
             if "127.0.0.1" in ip:
                 send_cef_message_local(port, start_millis, message_to_send, rfc_5424)
@@ -93,7 +93,7 @@ def main():
             rfc_5424 = False
         message_to_send = fixed_message_p1 + test_index + fixed_message_p2
         # distribute_message(ip, port, int(messages_per_second) * int(amount_of_seconds), int(messages_per_second), message_to_send)
-        stream_message(ip, port, messages_per_second, amount_of_seconds, message_to_send)
+        stream_message(ip, port, messages_per_second, amount_of_seconds, message_to_send, rfc_5424=rfc_5424)
         print("Done - " + str(int(messages_per_second) * int(amount_of_seconds)))
     end_millis = int(round(time.time() * 1000))
     print("Time[seconds]: " + str((end_millis-start_millis)/1000))
