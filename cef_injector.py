@@ -14,7 +14,7 @@ def send_cef_message_remote(ip, port, start_millis, message_to_send, rfc5424):
     if rfc5424 is False:
         command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:", message, "-P", str(port), "-d", "-n", str(ip)]
     else:
-        command_tokens = ["logger", "-p", "--rfc5424", "local4.warn", "-t", "CEF:", message, "-P", str(port), "-d", "-n", str(ip)]
+        command_tokens = ["logger","--rfc5424", "-p",  "local4.warn", "-t", "CEF:", message, "-P", str(port), "-d", "-n", str(ip)]
     logger = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     o, e = logger.communicate()
     if e is None:
@@ -28,7 +28,7 @@ def send_cef_message_local(port, start_millis, message_to_send, rfc5424):
     if rfc5424 is False:
         command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:", message, "-P", str(port), "-n", "127.0.0.1"]
     else:
-        command_tokens = ["logger", "-p", "--rfc5424", "local4.warn", "-t", "CEF:", message, "-P", str(port), "-n", "127.0.0.1"]
+        command_tokens = ["logger", "--rfc5424", "-p",  "local4.warn", "-t", "CEF:", message, "-P", str(port), "-n", "127.0.0.1"]
     logger = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     o, e = logger.communicate()
     if e is None:
@@ -71,7 +71,7 @@ def distribute_message(ip, port, amount, messages_per_second, message_to_send):
 
 def main():
     start_millis = int(round(time.time() * 1000))
-    if len(sys.argv) != 6:
+    if len(sys.argv) < 6:
         print("The script is expecting 4 arguments:")
         print("1) destination ip")
         print("2) destination port")
