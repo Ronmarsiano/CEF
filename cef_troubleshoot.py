@@ -18,6 +18,7 @@ rsyslog_daemon_forwarding_configuration_dir_path = "/etc/rsyslog.d/"
 syslog_ng_daemon_forwarding_configuration_dir_path = "/etc/syslog-ng/conf.d/"
 rsyslog_daemon_name = "rsyslog.d"
 syslog_ng_default_config_path = "/etc/syslog-ng/syslog-ng.conf"
+time_restriction = 60
 
 
 def print_error(input_str):
@@ -38,6 +39,28 @@ def print_notice(input_str):
 
 def print_command_response(input_str):
     print("\033[1;34;40m" + input_str + "\033[0m")
+
+
+def get_mock_message(index):
+    fixed_message = "0|Test Common Event Format |PAN-OS|common=event-format-test|end|TRAFFIC|1|rt=$common=event-formatted-receive_time deviceExternalId=0002D01655 src=1.1.1.1 dst=2.2.2.2 sourceTranslatedAddress=1.1.1.1 destinationTranslatedAddress=3.3.3.3 cs1Label=Rule cs1=CEF_TEST_InternetDNS "
+    return fixed_message + "|data" + index + "=example"
+
+
+def send_cef_message_local(port, amount):
+    print("Trying to send mock messages into your workspace to validate the pipeline")
+    try:
+        for index in range(0, amount):
+            message_to_send = get_mock_message(index)
+            command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:", message_to_send, "-P", str(port), "-n", "127.0.0.1"]
+        logger = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
+        o, e = logger.communicate()
+        if e is None:
+            print_command_response("Mock message sent")
+            return
+        else:
+            print_error("Error could not send cef mock message")
+    except OSError:
+        print_warning("Warning: Could not execute \'logger\' command which is a part of the syslog daemon this means that no mock message was sent to your workspace.")
 
 
 def check_red_hat_firewall_issue():
@@ -177,19 +200,28 @@ def rsyslog_cef_logs_received_in_correct_format():
         print_warning("Error: no CEF messages received by the daemon.\nPlease validate that you do send CEF messages to agent.")
 
 
-def incoming_logs_validations(incoming_port, ok_message):
+def incoming_logs_validations(incoming_port, ok_message, mock_messages):
     '''
     Validate that there is incoming traffic of CEF messages to the given port
+    :param mock_messages: Tels if to send mock messages to the pipe to validate it
     :param incoming_port: port to validate
     :param ok_message: message printed if found CEF messages
     :return:
     '''
-    print("Executing tcp dump on incoming port-" + incoming_port + " to validate arrival of CEF messages to daemon.")
+    start_sec = int(round(time.time()))
+    print("Executing tcp dump on incoming port-" + incoming_port + " to validate arrival of CEF messages to daemon for " + time_restriction + " seconds.")
     print("This could take up to 20 seconds.")
     command_tokens = ["sudo", "tcpdump", "-A", "-ni", "any", "port", incoming_port, "-vv"]
     print_notice(" ".join(command_tokens))
-    tcp_dump = subprocess.Popen( command_tokens, stdout=subprocess.PIPE)
+    tcp_dump = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     for row in iter(tcp_dump.stdout.readline, b''):
+        curr_sec = int(round(time.time()))
+        # Time restriction of 60 seconds
+        if curr_sec - start_sec >= time_restriction:
+            return False
+        if mock_messages is True:
+            # we always simulate to the daemon port
+            send_cef_message_local(port=daemon_port, amount=5)
         if "CEF" in row:
             print_ok(ok_message)
             print_notice("Notice: To tcp dump manually execute the following command - \'tcpdump -A -ni any port " + incoming_port + " -vv\'")
@@ -466,10 +498,10 @@ def handle_syslog_ng(workspace_id):
             netstat_open_port(agent_port , "Ok: omsagent is listening to incoming port " + agent_port, "Error: agent is not listening to incoming port " + agent_port + " please check that the process is up and running and the port is configured correctly.[Use netstat -an | grep [daemon port] to validate the connection or re-run ths script]")
             print("Validating CEF into syslog-ng daemon")
             time.sleep(1)
-            incoming_logs_validations(daemon_port, "Ok - received CEF message in daemon incoming port.["+daemon_port+"]")
+            incoming_logs_validations(daemon_port, "Ok - received CEF message in daemon incoming port.["+daemon_port+"]", mock_messages=False)
             time.sleep(1)
             incoming_logs_validations(agent_port,
-                                      "Ok - received CEF message in agent incoming port.[" + agent_port + "]")
+                                      "Ok - received CEF message in agent incoming port.[" + agent_port + "]", mock_messages=False)
         else:
             print_error("Error: syslog-ng daemon configuration was found invalid.")
             print_notice("Notice: please make sure:")
@@ -499,12 +531,12 @@ def handle_rsyslog(workspace_id):
                          "Error: agent is not listening to incoming port " + agent_port + " please check that the process is up and running and the port is configured correctly.[Use netstat -an | grep [daemon port] to validate the connection or re-run ths script]")
         print("Validating CEF into rsyslog daemon - port " + daemon_port)
         time.sleep(1)
-        incoming_logs_validations(daemon_port, "Ok - received CEF message in daemon incoming port.["+daemon_port+"]")
+        incoming_logs_validations(daemon_port, "Ok - received CEF message in daemon incoming port.["+daemon_port+"]", mock_messages=False)
         time.sleep(1)
         rsyslog_cef_logs_received_in_correct_format()
         # after validating logs are arriving validation that the daemon will accept them
         if check_rsyslog_configuration():
-            incoming_logs_validations(agent_port, "Ok - received CEF message in agent incoming port.["+agent_port+"]")
+            incoming_logs_validations(agent_port, "Ok - received CEF message in agent incoming port.["+agent_port+"]", mock_messages=False)
             time.sleep(1)
 
 
@@ -530,6 +562,8 @@ def main():
         handle_rsyslog(workspace_id)
     elif check_daemon("syslog-ng"):
         handle_syslog_ng(workspace_id)
+    incoming_logs_validations(daemon_port, "Ok - simulated messages successfully please check your workspace.",
+                              mock_messages=True)
     print("Completed troubleshooting.")
     print(
         "Please check Log Analytics to see if your logs are arriving. All events streamed from these appliances appear in raw form in Log Analytics under CommonSecurityLog type")
