@@ -464,7 +464,7 @@ def restart_daemon(daemon_name):
     restart = subprocess.Popen(["sudo", "service", daemon_name, "restart"], stdout=subprocess.PIPE)
     o, e = restart.communicate()
     if e is not None:
-        print_error("Error: could not restart " + daemon_name + "rsyslog daemon")
+        print_error("Error: could not restart " + daemon_name + "syslog daemon")
         return
     else:
         print_ok("" + daemon_name + " daemon restarted.")

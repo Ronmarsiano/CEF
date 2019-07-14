@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="edc9c0a2-b854-489a-ab81-b23afdd1b3fb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/cef_troubleshoot.py" beforeDir="false" afterPath="$PROJECT_DIR$/cef_troubleshoot.py" afterDir="false" />
-    </list>
+    <list default="true" id="edc9c0a2-b854-489a-ab81-b23afdd1b3fb" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,8 +34,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="428">
-              <caret line="236" column="59" selection-end-line="610" />
+            <state relative-caret-position="360">
+              <caret line="461" column="11" selection-start-line="461" selection-start-column="4" selection-end-line="461" selection-end-column="11" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
               </folding>
@@ -64,7 +62,6 @@
       <find>locate</find>
       <find>send_cef_message_remote</find>
       <find>cef</find>
-      <find>restart</find>
       <find>stream_message</find>
       <find>for</find>
       <find>I</find>
@@ -86,6 +83,7 @@
       <find>send_</find>
       <find>incoming_logs_validations</find>
       <find>mock_message</find>
+      <find>restart</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -237,7 +235,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/cef_troubleshoot.py</url>
-          <line>608</line>
+          <line>607</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
@@ -303,8 +301,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="428">
-          <caret line="236" column="59" selection-end-line="610" />
+        <state relative-caret-position="360">
+          <caret line="461" column="11" selection-start-line="461" selection-start-column="4" selection-end-line="461" selection-end-column="11" />
           <folding>
             <element signature="e#26#36#0" expanded="true" />
           </folding>
