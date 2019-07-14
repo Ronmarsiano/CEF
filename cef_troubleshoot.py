@@ -250,7 +250,7 @@ def incoming_logs_validations(incoming_port, ok_message, mock_message=False):
     while (end_seconds - start_seconds) < tcpdump_time_restriction:
         if mock_message is True:
             # Sending mock messages
-            send_cef_message_local(incoming_port, 5)
+            send_cef_message_local(daemon_port, 5)
         poll_result = poll_obj.poll(0)
         if poll_result:
             line = tcp_dump.stdout.readline()
@@ -597,7 +597,7 @@ def main():
     print("Simulating mock data which you can find in your workspace")
     # we always simulate to the daemon port
     print("Completed troubleshooting.")
-    incoming_logs_validations(daemon_port, "Ok - received CEF message in daemon incoming port.[" + daemon_port + "]", mock_message=True)
+    incoming_logs_validations(agent_port, "Ok - received CEF message in daemon incoming port [" + daemon_port + "] and to the omsagent port [" + agent_port + "].", mock_message=True)
     print(
         "Please check Log Analytics to see if your logs are arriving. All events streamed from these appliances appear in raw form in Log Analytics under CommonSecurityLog type")
     print_notice("Notice: If no logs appear in workspace:")
