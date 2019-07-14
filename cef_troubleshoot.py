@@ -251,6 +251,7 @@ def incoming_logs_validations(incoming_port, ok_message, mock_message=False):
         if mock_message is True:
             # Sending mock messages
             send_cef_message_local(daemon_port, 5)
+            mock_message = False
         poll_result = poll_obj.poll(0)
         if poll_result:
             line = tcp_dump.stdout.readline()
