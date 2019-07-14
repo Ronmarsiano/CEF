@@ -15,8 +15,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cef_installer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="14" column="79" selection-start-line="14" selection-start-column="79" selection-end-line="14" selection-end-column="79" />
+            <state relative-caret-position="377">
+              <caret line="373" column="53" selection-start-line="373" selection-start-column="53" selection-end-line="373" selection-end-column="53" />
               <folding>
                 <element signature="e#26#43#0" expanded="true" />
               </folding>
@@ -36,8 +36,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="460" column="11" selection-start-line="460" selection-start-column="4" selection-end-line="460" selection-end-column="11" />
+            <state relative-caret-position="445">
+              <caret line="416" column="38" selection-start-line="416" selection-start-column="38" selection-end-line="416" selection-end-column="38" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
               </folding>
@@ -56,7 +56,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ll</find>
       <find>grep</find>
       <find>source</find>
       <find>locate_check</find>
@@ -86,6 +85,7 @@
       <find>restart_daemon</find>
       <find>fixed_message_p1</find>
       <find>restart</find>
+      <find>Message</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -237,7 +237,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/cef_troubleshoot.py</url>
-          <line>606</line>
+          <line>608</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
@@ -293,8 +293,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_installer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="14" column="79" selection-start-line="14" selection-start-column="79" selection-end-line="14" selection-end-column="79" />
+        <state relative-caret-position="377">
+          <caret line="373" column="53" selection-start-line="373" selection-start-column="53" selection-end-line="373" selection-end-column="53" />
           <folding>
             <element signature="e#26#43#0" expanded="true" />
           </folding>
@@ -303,8 +303,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="460" column="11" selection-start-line="460" selection-start-column="4" selection-end-line="460" selection-end-column="11" />
+        <state relative-caret-position="445">
+          <caret line="416" column="38" selection-start-line="416" selection-start-column="38" selection-end-line="416" selection-end-column="38" />
           <folding>
             <element signature="e#26#36#0" expanded="true" />
           </folding>
