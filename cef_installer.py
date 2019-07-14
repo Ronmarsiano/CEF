@@ -370,7 +370,8 @@ def get_rsyslog_daemon_configuration_content(omsagent_incoming_port):
 
 
 def get_syslog_ng_damon_configuration_content(omsagent_incoming_port):
-    oms_filter = "filter f_oms_filter {match(\"CEF\" value(\"MESSAGE\"));};\n"
+    # we can sepcify the part searched with MESSAGE or MSGHDR (for the header) "filter f_oms_filter {match(\"CEF\" value(\"MESSAGE\"));};\n"
+    oms_filter = "filter f_oms_filter {match(\"CEF\");};\n"
     oms_destination = "destination oms_destination {tcp(\"127.0.0.1\" port(" + omsagent_incoming_port + "));};\n"
     log = "log {source(s_src);filter(f_oms_filter);destination(oms_destination);};\n"
     content = oms_filter + oms_destination + log
