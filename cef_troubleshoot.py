@@ -49,9 +49,7 @@ def get_mock_message(index):
 
 
 def send_cef_message_local(port, amount):
-    print("Trying to send mock messages into your workspace to validate the pipeline")
     try:
-        print("Sending mock message:\n" + get_mock_message(0))
         for index in range(0, amount):
             message_to_send = get_mock_message(index)
             command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:", message_to_send, "-P", str(port), "-n",
@@ -60,7 +58,6 @@ def send_cef_message_local(port, amount):
             o, e = logger.communicate()
             if e is not None:
                 print_error("Error could not send cef mock message")
-        print_ok("Mock messages sent.")
         return
     except OSError:
         print_warning(
@@ -597,7 +594,7 @@ def main():
     print("Simulating mock data which you can find in your workspace")
     # we always simulate to the daemon port
     print("Completed troubleshooting.")
-    incoming_logs_validations(agent_port, "Ok - received CEF message in daemon incoming port [" + daemon_port + "] and to the omsagent port [" + agent_port + "].", mock_message=True)
+    incoming_logs_validations(agent_port, "Ok - Mock messages sent and received in daemon incoming port [" + daemon_port + "] and to the omsagent port [" + agent_port + "].", mock_message=True)
     print(
         "Please check Log Analytics to see if your logs are arriving. All events streamed from these appliances appear in raw form in Log Analytics under CommonSecurityLog type")
     print_notice("Notice: If no logs appear in workspace:")

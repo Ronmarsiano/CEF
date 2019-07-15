@@ -14,7 +14,6 @@ def send_cef_message_remote(ip, port, start_millis, message_to_send, rfc5424):
     if rfc5424 is False:
         command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:", message, "-P", str(port), "-d", "-n", str(ip)]
     else:
-        print("rfc")
         command_tokens = ["logger", "--rfc5424", "-p",  "local4.warn", "-t", "CEF:", message, "-P", str(port), "-d", "-n", str(ip)]
     logger = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     o, e = logger.communicate()
