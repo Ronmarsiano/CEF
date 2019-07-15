@@ -36,8 +36,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="445">
-              <caret line="416" column="38" selection-start-line="416" selection-start-column="38" selection-end-line="416" selection-end-column="38" />
+            <state relative-caret-position="544">
+              <caret line="63" column="14" lean-forward="true" selection-start-line="63" selection-start-column="14" selection-end-line="63" selection-end-column="14" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
               </folding>
@@ -56,8 +56,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>grep</find>
-      <find>source</find>
       <find>locate_check</find>
       <find>locate</find>
       <find>send_cef_message_remote</find>
@@ -73,10 +71,8 @@
       <find>suc</find>
       <find>arriv</find>
       <find>tcpdump</find>
-      <find>tcpdu</find>
       <find>send_cef_message_local</find>
       <find>port</find>
-      <find>mock</find>
       <find>send_</find>
       <find>incoming_logs_validations</find>
       <find>mock_message</find>
@@ -86,6 +82,10 @@
       <find>fixed_message_p1</find>
       <find>restart</find>
       <find>Message</find>
+      <find>tcpdu</find>
+      <find>send</find>
+      <find>mock</find>
+      <find>get_mock_message</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -104,11 +104,11 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="2707" />
-    <option name="y" value="40" />
-    <option name="width" value="2330" />
-    <option name="height" value="1323" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="385" />
+    <option name="y" value="212" />
+    <option name="width" value="1546" />
+    <option name="height" value="830" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -210,10 +210,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2707" y="40" width="2330" height="1323" extended-state="0" />
+    <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.236911" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.213948" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -237,7 +237,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/cef_troubleshoot.py</url>
-          <line>608</line>
+          <line>606</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
@@ -303,8 +303,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="445">
-          <caret line="416" column="38" selection-start-line="416" selection-start-column="38" selection-end-line="416" selection-end-column="38" />
+        <state relative-caret-position="544">
+          <caret line="63" column="14" lean-forward="true" selection-start-line="63" selection-start-column="14" selection-end-line="63" selection-end-column="14" />
           <folding>
             <element signature="e#26#36#0" expanded="true" />
           </folding>

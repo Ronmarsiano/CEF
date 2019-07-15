@@ -51,16 +51,14 @@ def get_mock_message(index):
 def send_cef_message_local(port, amount):
     print("Trying to send mock messages into your workspace to validate the pipeline")
     try:
+        print("Sending mock message:\n" + get_mock_message(0))
         for index in range(0, amount):
             message_to_send = get_mock_message(index)
-            print("The message " + message_to_send)
             command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:", message_to_send, "-P", str(port), "-n",
                               "127.0.0.1"]
             logger = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
             o, e = logger.communicate()
-            if e is None:
-                print_command_response("Mock message sent")
-            else:
+            if e is not None:
                 print_error("Error could not send cef mock message")
         print_ok("Mock messages sent.")
         return
