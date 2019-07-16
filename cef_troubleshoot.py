@@ -83,7 +83,7 @@ def check_red_hat_firewall_issue():
                 "Warning: you have a firewall running on your linux machine this can prevent communication between the syslog daemon and the omsagent.")
             print("Checking if firewall has exception for omsagent port.[" + agent_port + "]")
             if red_hat_firewall_d_exception_for_omsagent():
-                print_ok("Ok: Found exception in the firewalld for the omsagent port.[" + agent_port + "]")
+                print_ok("Found exception in the firewalld for the omsagent port.[" + agent_port + "]")
                 restart_red_hat_firewall_d()
             else:
                 print_warning("Warning: no exception found for omsagent in the firewall")
@@ -128,7 +128,7 @@ def restart_red_hat_firewall_d():
     if e is not None:
         print_error("Error: could not get /etc/firewalld/zones/public.xml file holding firewall exceptions.")
     else:
-        print_ok("Ok: restarted firewalld.")
+        print_ok("Restarted firewalld.")
 
 
 def security_enhanced_linux_enabled():
@@ -200,7 +200,7 @@ def rsyslog_cef_logs_received_in_correct_format():
     time.sleep(5)
     end_amount = rsyslog_get_cef_log_counter()
     if end_amount > start_amount:
-        print_ok("Ok: received CEF messages by the daemon")
+        print_ok("Received CEF messages by the daemon")
     else:
         print_warning(
             "Error: no CEF messages received by the daemon.\nPlease validate that you do send CEF messages to agent.")
@@ -211,7 +211,6 @@ def handle_tcpdump_line(line, incoming_port, ok_message):
         print_ok(ok_message)
         print_notice(
             "Notice: To tcp dump manually execute the following command - \'tcpdump -A -ni any port " + incoming_port + " -vv\'")
-        print_warning("Warning: Make sure that the logs you send comply with RFC 5424.")
         time.sleep(1)
         return True
     # Handle command not found
@@ -319,7 +318,7 @@ def omsagent_process_check(oms_process_name):
     if len(tokens) > 1:
         for single_token in tokens:
             if oms_agent_process_name in single_token:
-                print_ok("Ok: Found omsagent process running on this machine.")
+                print_ok("Found omsagent process running on this machine.")
                 return True
     print_error("Error: Could not find omsagent process running on this machine.")
     return False
@@ -518,17 +517,17 @@ def handle_syslog_ng(workspace_id):
             print("Trying to restart syslog daemon")
             restart_daemon("syslog-ng")
             restart_omsagent(workspace_id)
-            netstat_open_port("0.0.0.0:" + daemon_port, "Ok: daemon incoming port " + daemon_port + " is open",
+            netstat_open_port("0.0.0.0:" + daemon_port, "Daemon incoming port " + daemon_port + " is open",
                               "Error: daemon incoming port is not open, please check that the process is up and running and the port is configured correctly.")
-            netstat_open_port(agent_port, "Ok: omsagent is listening to incoming port " + agent_port,
+            netstat_open_port(agent_port, "Omsagent is listening to incoming port " + agent_port,
                               "Error: agent is not listening to incoming port " + agent_port + " please check that the process is up and running and the port is configured correctly.[Use netstat -an | grep [daemon port] to validate the connection or re-run ths script]")
             print("Validating CEF into syslog-ng daemon")
             time.sleep(1)
             incoming_logs_validations(daemon_port,
-                                      "Ok - received CEF message in daemon incoming port.[" + daemon_port + "]", mock_message=False)
+                                      "Received CEF message in daemon incoming port.[" + daemon_port + "]", mock_message=False)
             time.sleep(1)
             incoming_logs_validations(agent_port,
-                                      "Ok - received CEF message in agent incoming port.[" + agent_port + "]", mock_message=False)
+                                      "Received CEF message in agent incoming port.[" + agent_port + "]", mock_message=False)
         else:
             print_error("Error: syslog-ng daemon configuration was found invalid.")
             print_notice("Notice: please make sure:")
@@ -552,27 +551,27 @@ def handle_rsyslog(workspace_id):
         print("Trying to restart syslog daemon")
         restart_daemon("rsyslog")
         restart_omsagent(workspace_id)
-        netstat_open_port("0.0.0.0:" + daemon_port, "Ok: daemon incoming port " + daemon_port + " is open",
+        netstat_open_port("0.0.0.0:" + daemon_port, "Daemon incoming port " + daemon_port + " is open",
                           "Error: daemon incoming port is not open, please check that the process is up and running and the port is configured correctly.\nAction: enable ports in \'/etc/rsyslog.conf\' file which contains daemon incoming ports.")
-        netstat_open_port(agent_port, "Ok: omsagent is listening to incoming port " + agent_port,
+        netstat_open_port(agent_port, "Omsagent is listening to incoming port " + agent_port,
                           "Error: agent is not listening to incoming port " + agent_port + " please check that the process is up and running and the port is configured correctly.[Use netstat -an | grep [daemon port] to validate the connection or re-run ths script]")
         print("Validating CEF into rsyslog daemon - port " + daemon_port)
         time.sleep(1)
         incoming_logs_validations(daemon_port,
-                                  "Ok - received CEF message in daemon incoming port.[" + daemon_port + "]", mock_message=False)
+                                  "Received CEF message in daemon incoming port.[" + daemon_port + "]", mock_message=False)
         time.sleep(1)
         rsyslog_cef_logs_received_in_correct_format()
         # after validating logs are arriving validation that the daemon will accept them
         if check_rsyslog_configuration():
             incoming_logs_validations(agent_port,
-                                      "Ok - received CEF message in agent incoming port.[" + agent_port + "]", mock_message=False)
+                                      "Received CEF message in agent incoming port.[" + agent_port + "]", mock_message=False)
             time.sleep(1)
 
 
 def main():
     print_notice("Note this script should be run in elevated privileges")
     if len(sys.argv) != 2:
-        print_error("Error: The installation script is expecting 1 arguments:")
+        print_error("The installation script is expecting 1 arguments:")
         print_error("\t1) workspace id")
         return
     else:
@@ -593,13 +592,13 @@ def main():
         handle_syslog_ng(workspace_id)
     print("Simulating mock data which you can find in your workspace")
     # we always simulate to the daemon port
-    print("Completed troubleshooting.")
-    incoming_logs_validations(agent_port, "Ok - Mock messages sent and received in daemon incoming port [" + daemon_port + "] and to the omsagent port [" + agent_port + "].", mock_message=True)
+    incoming_logs_validations(agent_port, "Mock messages sent and received in daemon incoming port [" + daemon_port + "] and to the omsagent port [" + agent_port + "].", mock_message=True)
+    print_ok("Completed troubleshooting.")
     print(
         "Please check Log Analytics to see if your logs are arriving. All events streamed from these appliances appear in raw form in Log Analytics under CommonSecurityLog type")
-    print_notice("Notice: If no logs appear in workspace:")
-    print_notice("try looking at: \"tail -f /var/opt/microsoft/omsagent/" + workspace_id + "/log/omsagent.log\".")
+    print("Notice: If no logs appear in workspace try looking at omsagent logs:")
+    print_notice("tail -f /var/opt/microsoft/omsagent/" + workspace_id + "/log/omsagent.log")
+    print_warning("Warning: Make sure that the logs you send comply with RFC 5424.")
 
 
 main()
-time.sleep(2)
