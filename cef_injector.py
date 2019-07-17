@@ -46,7 +46,7 @@ def stream_message(ip, port, message_per_second, time_in_second, message_to_send
             if "127.0.0.1" in ip:
                 send_cef_message_local(port, start_millis, message_to_send, is_cef=is_cef, rfc5424=rfc_5424)
             else:
-                send_cef_message_remote(ip, port, start_millis, message_to_send, rfc_5424)
+                send_cef_message_remote(ip, port, start_millis, message_to_send, is_cef=is_cef, rfc5424=rfc_5424)
         end_millis = int(round(time.time() * 1000))
         time_send_took = end_millis - start_millis
         if time_send_took < 1000:
@@ -80,7 +80,7 @@ def main():
         print("4) amount of seconds")
         print("5) test index")
         print("6) CEF/CISCO")
-        print("6) Optional - rfc5424")
+        print("7) Optional - rfc5424")
 
         return
     else:
