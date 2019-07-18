@@ -7,15 +7,16 @@ import random
 
 fixed_message_p1 = "0|Test "
 fixed_message_p2 = "|PAN-OS|common=event-format-test|end|TRAFFIC|1|rt=$common=event-formatformatted-receive_time deviceExternalId=0002D01655 src=1.1.1.1 dst=2.2.2.2 sourceTranslatedAddress=1.1.1.1 destinationTranslatedAddress=3.3.3.3 cs1Label=Rule cs1=InternetDNS "
-cisco_message = " Built outbound ICMP connection for faddr 192.168.200.146/196 gaddr 192.168.150.233/0 laddr 192.168.150.233/0]"
+cisco_message = "Inbound TCP connection denied from 183.60.23.164/58098 to 131.107.193.171/23 flags SYN  on interface inet"
 
 
 def send_cef_message_remote(ip, port, start_millis, message_to_send, is_cef, rfc5424):
-    message = message_to_send + " Message=" + str(start_millis) + " Random =" + str(random.randint(0, 50000))
+    message = message_to_send + " Message=" + str(start_millis) + " Random =" + str(
+        random.randint(0, 50000)) if is_cef is True else message_to_send
     if rfc5424 is False:
-        command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:" if is_cef else "%ASA-7-710005:", message, "-P", str(port), "-d", "-n", str(ip)]
+        command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:" if is_cef is True else "%ASA-2-106001:", message, "-P", str(port), "-d", "-n", str(ip)]
     else:
-        command_tokens = ["logger", "--rfc5424", "-p",  "local4.warn", "-t", "CEF:" if is_cef else "%ASA-7-710005:", message, "-P", str(port), "-d", "-n", str(ip)]
+        command_tokens = ["logger", "--rfc5424", "-p",  "local4.warn", "-t", "CEF:" if is_cef is True else "%ASA-2-106001:", message, "-P", str(port), "-d", "-n", str(ip)]
     logger = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     o, e = logger.communicate()
     if e is None:
@@ -25,11 +26,12 @@ def send_cef_message_remote(ip, port, start_millis, message_to_send, is_cef, rfc
 
 
 def send_cef_message_local(port, start_millis, message_to_send, is_cef, rfc5424):
-    message = message_to_send+" Message="+str(start_millis) + " Random =" + str(random.randint(0, 500))
+    message = message_to_send + " Message=" + str(start_millis) + " Random =" + str(
+        random.randint(0, 50000)) if is_cef is True else message_to_send
     if rfc5424 is False:
-        command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:" if is_cef else "%ASA-7-710005:", message, "-P", str(port), "-n", "127.0.0.1"]
+        command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:" if is_cef is True else "%ASA-2-106001:", message, "-P", str(port), "-n", "127.0.0.1"]
     else:
-        command_tokens = ["logger", "--rfc5424", "-p",  "local4.warn", "-t", "CEF:" if is_cef else "%ASA-7-710005:", message, "-P", str(port), "-n", "127.0.0.1"]
+        command_tokens = ["logger", "--rfc5424", "-p",  "local4.warn", "-t", "CEF:" if is_cef is True else "%ASA-2-106001:", message, "-P", str(port), "-n", "127.0.0.1"]
     logger = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     o, e = logger.communicate()
     if e is None:
