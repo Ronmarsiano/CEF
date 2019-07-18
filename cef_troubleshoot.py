@@ -169,7 +169,7 @@ def rsyslog_get_cef_log_counter():
     print("Validating the CEF logs are received and are in the correct format when received by syslog daemon")
     print_notice("sudo tac /var/log/syslog")
     tac = subprocess.Popen(["sudo", "tac", syslog_log_dir[0]], stdout=subprocess.PIPE)
-    grep = subprocess.Popen(["grep", "CEF"], stdin=tac.stdout, stdout=subprocess.PIPE)
+    grep = subprocess.Popen(["grep", "-E", "\"CEF|ASA\""], stdin=tac.stdout, stdout=subprocess.PIPE)
     count_lines = subprocess.Popen(["wc", "-l"], stdin=grep.stdout, stdout=subprocess.PIPE)
     o, e = count_lines.communicate()
     output = o.decode('ascii')
@@ -180,7 +180,7 @@ def rsyslog_get_cef_log_counter():
         print("Validating the CEF logs are received and are in the correct format when received by syslog daemon")
         print_notice("sudo tac /var/log/messages")
         tac = subprocess.Popen(["sudo", "tac", syslog_log_dir[1]], stdout=subprocess.PIPE)
-        grep = subprocess.Popen(["grep", "CEF"], stdin=tac.stdout, stdout=subprocess.PIPE)
+        grep = subprocess.Popen(["grep", "-E", "\"CEF|ASA\""], stdin=tac.stdout, stdout=subprocess.PIPE)
         count_lines = subprocess.Popen(["wc", "-l"], stdin=grep.stdout, stdout=subprocess.PIPE)
         o, e = count_lines.communicate()
         output = o.decode('ascii')
@@ -188,7 +188,7 @@ def rsyslog_get_cef_log_counter():
             print("Located " + output[:-1] + " CEF messages")
             return int(output)
     print_error("Error: could not find CEF logs.")
-    print_notice("Notice: execute \"sudo tac /var/log/syslog or /var/log/messages | grep CEF -m 10\" manually.")
+    print_notice("Notice: execute \"sudo tac /var/log/syslog or /var/log/messages | grep -E \"CEF|ASA\" -m 10\" manually.")
     return 0
 
 
