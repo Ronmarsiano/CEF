@@ -152,7 +152,7 @@ def set_omsagent_configuration(workspace_id, omsagent_incoming_port):
     configuration_path = "/etc/opt/microsoft/omsagent/" + workspace_id + "/conf/omsagent.d/security_events.conf"
     print("Creating omsagent configuration to listen to syslog daemon forwarding port - " + omsagent_incoming_port)
     print("Configuration location is - " + configuration_path)
-    command_tokens = ["sudo", "wget", "-O", configuration_path, "\"https://aka.ms/syslog-config-file-linux\""]
+    command_tokens = ["sudo", "wget", "-O", configuration_path, "https://aka.ms/syslog-config-file-linux"]
     print("Download configuration into the correct directory")
     print_notice(" ".join(command_tokens))
     time.sleep(3)
