@@ -48,8 +48,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="309">
-              <caret line="194" column="15" selection-start-line="194" selection-start-column="12" selection-end-line="194" selection-end-column="15" />
+            <state relative-caret-position="411">
+              <caret line="182" column="10" selection-start-line="182" selection-start-column="10" selection-end-line="182" selection-end-column="10" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
               </folding>
@@ -68,8 +68,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>except</find>
-      <find>time_restriction</find>
       <find>restriction</find>
       <find>suc</find>
       <find>arriv</find>
@@ -98,6 +96,8 @@
       <find>CEF</find>
       <find>%ASA</find>
       <find>rsyslog_security_config_omsagent_conf_content_tokens</find>
+      <find>grep</find>
+      <find>CEF messages</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -318,8 +318,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="194" column="15" selection-start-line="194" selection-start-column="12" selection-end-line="194" selection-end-column="15" />
+        <state relative-caret-position="411">
+          <caret line="182" column="10" selection-start-line="182" selection-start-column="10" selection-end-line="182" selection-end-column="10" />
           <folding>
             <element signature="e#26#36#0" expanded="true" />
           </folding>

@@ -166,28 +166,28 @@ def rsyslog_get_cef_log_counter():
     count
     :return:
     '''
-    print("Validating the CEF logs are received and are in the correct format when received by syslog daemon")
+    print("Validating the CEF\\ASA logs are received and are in the correct format when received by syslog daemon")
     print_notice("sudo tac /var/log/syslog")
     tac = subprocess.Popen(["sudo", "tac", syslog_log_dir[0]], stdout=subprocess.PIPE)
-    grep = subprocess.Popen(["grep", "-E", "\"CEF|ASA\""], stdin=tac.stdout, stdout=subprocess.PIPE)
+    grep = subprocess.Popen(["grep", "-E", "CEF\|ASA"], stdin=tac.stdout, stdout=subprocess.PIPE)
     count_lines = subprocess.Popen(["wc", "-l"], stdin=grep.stdout, stdout=subprocess.PIPE)
     o, e = count_lines.communicate()
     output = o.decode('ascii')
     if e is None:
-        print("Located " + output[:-1] + " CEF messages")
+        print("Located " + str(output) + " CEF\\ASA messages")
         return int(output)
     elif "No such file or directory" in output:
-        print("Validating the CEF logs are received and are in the correct format when received by syslog daemon")
+        print("Validating the CEF\\ASA logs are received and are in the correct format when received by syslog daemon")
         print_notice("sudo tac /var/log/messages")
         tac = subprocess.Popen(["sudo", "tac", syslog_log_dir[1]], stdout=subprocess.PIPE)
-        grep = subprocess.Popen(["grep", "-E", "\"CEF|ASA\""], stdin=tac.stdout, stdout=subprocess.PIPE)
+        grep = subprocess.Popen(["grep", "-E", "CEF\|ASA"], stdin=tac.stdout, stdout=subprocess.PIPE)
         count_lines = subprocess.Popen(["wc", "-l"], stdin=grep.stdout, stdout=subprocess.PIPE)
         o, e = count_lines.communicate()
         output = o.decode('ascii')
         if e is None:
-            print("Located " + output[:-1] + " CEF messages")
+            print("Located " + str(output) + " CEF messages")
             return int(output)
-    print_error("Error: could not find CEF logs.")
+    print_error("Error: could not find CEF\\ASA logs.")
     print_notice("Notice: execute \"sudo tac /var/log/syslog or /var/log/messages | grep -E \"CEF|ASA\" -m 10\" manually.")
     return 0
 
@@ -207,7 +207,7 @@ def rsyslog_cef_logs_received_in_correct_format():
 
 
 def handle_tcpdump_line(line, incoming_port, ok_message):
-    if "CEF" in line:
+    if "CEF" in line or "ASA" in line:
         print_ok(ok_message)
         print_notice(
             "Notice: To tcp dump manually execute the following command - \'tcpdump -A -ni any port " + incoming_port + " -vv\'")
@@ -555,10 +555,10 @@ def handle_rsyslog(workspace_id):
                           "Error: daemon incoming port is not open, please check that the process is up and running and the port is configured correctly.\nAction: enable ports in \'/etc/rsyslog.conf\' file which contains daemon incoming ports.")
         netstat_open_port(agent_port, "Omsagent is listening to incoming port " + agent_port,
                           "Error: agent is not listening to incoming port " + agent_port + " please check that the process is up and running and the port is configured correctly.[Use netstat -an | grep [daemon port] to validate the connection or re-run ths script]")
-        print("Validating CEF into rsyslog daemon - port " + daemon_port)
+        print("Validating CEF\\ASA into rsyslog daemon - port " + daemon_port)
         time.sleep(1)
         incoming_logs_validations(daemon_port,
-                                  "Received CEF message in daemon incoming port.[" + daemon_port + "]", mock_message=False)
+                                  "Received CEF\\ASA message in daemon incoming port.[" + daemon_port + "]", mock_message=False)
         time.sleep(1)
         rsyslog_cef_logs_received_in_correct_format()
         # after validating logs are arriving validation that the daemon will accept them
