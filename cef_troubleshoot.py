@@ -6,7 +6,7 @@ import time
 
 daemon_port = "514"
 agent_port = "25226"
-rsyslog_security_config_omsagent_conf_content_tokens = ["local4.|*.", "debug|*", "@127.0.0.1:25226"]
+rsyslog_security_config_omsagent_conf_content_tokens = ["*.", "*", "@127.0.0.1:25226", "CEF", "ASA"]
 syslog_ng_security_config_omsagent_conf_content_tokens = ["f_oms_filter", "oms_destination", "port(25226)", "tcp",
                                                           "source", "s_src", "oms_destination"]
 oms_agent_configuration_content_tokens = [daemon_port, "127.0.0.1"]
