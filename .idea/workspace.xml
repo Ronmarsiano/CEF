@@ -15,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_installer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="364" column="117" selection-start-line="364" selection-start-column="117" selection-end-line="364" selection-end-column="117" />
+            <state relative-caret-position="541">
+              <caret line="373" column="66" selection-start-line="373" selection-start-column="66" selection-end-line="373" selection-end-column="66" />
               <folding>
                 <element signature="e#26#43#0" expanded="true" />
               </folding>
@@ -27,7 +27,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cef_injector.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
+            <state relative-caret-position="340">
               <caret line="21" column="17" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
@@ -68,7 +68,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>mock_message</find>
       <find>start</find>
       <find>restart_daemon</find>
       <find>fixed_message_p1</find>
@@ -98,6 +97,7 @@
       <find>tcp</find>
       <find>tcpdum</find>
       <find>reg</find>
+      <find>regex</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -117,8 +117,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2967" />
-    <option name="y" value="96" />
+    <option name="x" value="2672" />
+    <option name="y" value="159" />
     <option name="width" value="1933" />
     <option name="height" value="1038" />
   </component>
@@ -289,16 +289,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cefInjector.py" />
-    <entry file="file://$PROJECT_DIR$/cef_injector.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="21" column="17" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
-          <folding>
-            <element signature="e#26#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/1991238357/builtins.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="19210">
@@ -319,10 +309,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/cef_injector.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="21" column="17" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
+          <folding>
+            <element signature="e#26#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cef_installer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="364" column="117" selection-start-line="364" selection-start-column="117" selection-end-line="364" selection-end-column="117" />
+        <state relative-caret-position="541">
+          <caret line="373" column="66" selection-start-line="373" selection-start-column="66" selection-end-line="373" selection-end-column="66" />
           <folding>
             <element signature="e#26#43#0" expanded="true" />
           </folding>
