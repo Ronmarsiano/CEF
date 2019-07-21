@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="edc9c0a2-b854-489a-ab81-b23afdd1b3fb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cef_installer.py" beforeDir="false" afterPath="$PROJECT_DIR$/cef_installer.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,8 +16,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cef_installer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="232">
-              <caret line="367" column="35" lean-forward="true" selection-end-line="480" />
+            <state relative-caret-position="286">
+              <caret line="364" column="145" selection-start-line="364" selection-start-column="145" selection-end-line="364" selection-end-column="145" />
               <folding>
                 <element signature="e#26#43#0" expanded="true" />
               </folding>
@@ -27,8 +28,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cef_injector.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="21" column="17" lean-forward="true" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
+            <state relative-caret-position="306">
+              <caret line="21" column="17" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
               </folding>
@@ -39,7 +40,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/1991238357/builtins.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="278">
+            <state relative-caret-position="19210">
               <caret line="1130" column="8" selection-start-line="1130" selection-start-column="8" selection-end-line="1130" selection-end-column="8" />
             </state>
           </provider>
@@ -48,8 +49,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="117">
-              <caret line="208" column="18" selection-start-line="208" selection-start-column="11" selection-end-line="208" selection-end-column="18" />
+            <state relative-caret-position="286">
+              <caret line="304" column="54" selection-start-line="304" selection-start-column="54" selection-end-line="304" selection-end-column="54" />
               <folding>
                 <element signature="e#26#36#0" expanded="true" />
               </folding>
@@ -68,12 +69,10 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>suc</find>
       <find>arriv</find>
       <find>port</find>
       <find>send_</find>
       <find>mock_message</find>
-      <find>msg</find>
       <find>start</find>
       <find>restart_daemon</find>
       <find>fixed_message_p1</find>
@@ -94,10 +93,12 @@
       <find>CEF</find>
       <find>%ASA</find>
       <find>rsyslog_security_config_omsagent_conf_content_tokens</find>
-      <find>grep</find>
       <find>CEF messages</find>
       <find>tcpdump</find>
       <find>Download configuration into the correct directory</find>
+      <find>rawm</find>
+      <find>grep</find>
+      <find>msg</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -222,10 +223,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.35865256" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26753348" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -235,7 +236,7 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="7" visible="true" weight="0.3493635" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="7" visible="true" weight="0.24629775" />
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" />
@@ -289,27 +290,30 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cefInjector.py" />
-    <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/1991238357/builtins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="1130" column="8" selection-start-line="1130" selection-start-column="8" selection-end-line="1130" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cef_injector.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="21" column="17" lean-forward="true" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
+        <state relative-caret-position="306">
+          <caret line="21" column="17" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
           <folding>
             <element signature="e#26#36#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/1991238357/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19210">
+          <caret line="1130" column="8" selection-start-line="1130" selection-start-column="8" selection-end-line="1130" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/cef_troubleshoot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="208" column="18" selection-start-line="208" selection-start-column="11" selection-end-line="208" selection-end-column="18" />
+        <state relative-caret-position="286">
+          <caret line="304" column="54" selection-start-line="304" selection-start-column="54" selection-end-line="304" selection-end-column="54" />
           <folding>
             <element signature="e#26#36#0" expanded="true" />
           </folding>
@@ -318,8 +322,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cef_installer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="367" column="35" lean-forward="true" selection-end-line="480" />
+        <state relative-caret-position="286">
+          <caret line="364" column="145" selection-start-line="364" selection-start-column="145" selection-end-line="364" selection-end-column="145" />
           <folding>
             <element signature="e#26#43#0" expanded="true" />
           </folding>
