@@ -124,7 +124,7 @@ def main():
     replace_files()
     set_omsagent_configuration(workspace_id=workspace_id)
     restart_omsagent(workspace_id=workspace_id)
-    print_ok("Installation completed")
+    print_ok("Script completed")
 
 
 main()
