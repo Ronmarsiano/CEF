@@ -14,9 +14,9 @@ def send_cef_message_remote(ip, port, start_millis, message_to_send, is_cef, rfc
     message = message_to_send + " Message=" + str(start_millis) + " Random =" + str(
         random.randint(0, 50000)) if is_cef is True else message_to_send
     if rfc5424 is False:
-        command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:" if is_cef is True else "%ASA-2-106001:", message, "-P", str(port), "-d", "-n", str(ip)]
+        command_tokens = ["logger", "-p", "local4.warn", "-t", "CEF:" if is_cef is True else "%ASA-2-106001:", message, "-P", str(port), "-T", "-n", str(ip)]
     else:
-        command_tokens = ["logger", "--rfc5424", "-p",  "local4.warn", "-t", "CEF:" if is_cef is True else "%ASA-2-106001:", message, "-P", str(port), "-d", "-n", str(ip)]
+        command_tokens = ["logger", "--rfc5424", "-p",  "local4.warn", "-t", "CEF:" if is_cef is True else "%ASA-2-106001:", message, "-P", str(port), "-T", "-n", str(ip)]
     logger = subprocess.Popen(command_tokens, stdout=subprocess.PIPE)
     o, e = logger.communicate()
     if e is None:
