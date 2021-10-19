@@ -5,8 +5,8 @@ import time
 import random
 
 
-fixed_message_p1 = "0|Test "
-fixed_message_p2 = "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0002D01655 dpt=49514 dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=deny src=192.168.0.1 dst=164.121.0.4 sourceTranslatedAddress=1.1.1.1 destinationTranslatedAddress=3.3.3.3"
+fixed_message_p1 = "0|Palo Alto Networks"
+fixed_message_p2 = "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0002D01655 dpt=49514 dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=deny src=192.168.0.1 dst=164.121.0.4 sourceTranslatedAddress=1.1.1.1 destinationTranslatedAddress=3.3.3.3 testIndex="
 cisco_message = "Inbound TCP connection denied from 183.60.23.164/58098 to 131.107.193.171/23 flags SYN  on interface inet"
 
 
@@ -98,7 +98,7 @@ def main():
         else:
             rfc_5424 = False
         print("rfc_5424="+str(rfc_5424))
-        message_to_send = (fixed_message_p1 + test_index + fixed_message_p2) if is_cef is True else cisco_message
+        message_to_send = (fixed_message_p1 + fixed_message_p2+ test_index) if is_cef is True else cisco_message
         # distribute_message(ip, port, int(messages_per_second) * int(amount_of_seconds), int(messages_per_second), message_to_send)
         stream_message(ip, port, messages_per_second, amount_of_seconds, message_to_send, is_cef=is_cef, rfc_5424=rfc_5424)
         print("Done - " + str(int(messages_per_second) * int(amount_of_seconds)))
