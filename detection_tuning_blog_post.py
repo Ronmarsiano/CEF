@@ -6,7 +6,7 @@ import random
 
 
 fixed_message_p1 = "0|Palo Alto Networks"
-fixed_message_p2 = "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=BarryAllen@contoso77.com suser=BarryAllen@contoso77.com dst=303.14.0.6 src=204.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack src=204.128.0.2 sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="
+fixed_message_p2 = "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=SelinaKyle@contoso77.com suser=ClarkJosephKent@contoso77.com dst=403.14.0.6 src=54.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack src=204.128.0.2 sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="
 cisco_message = "Inbound TCP connection denied from 183.60.23.164/58098 to 131.107.193.171/23 flags SYN  on interface inet"
 
 
@@ -43,8 +43,6 @@ def send_cef_message_local(port, start_millis, message_to_send, is_cef, rfc5424)
 def stream_message(ip, port, message_per_second, time_in_second, message_to_send, is_cef, rfc_5424):
     for curr_second in range(0, int(time_in_second)):
         start_millis = int(round(time.time() * 1000))
-        rand_int = random.randint(0, 1000)
-        message_to_send = message_per_second + " rand=" + str(rand_int)
         print("Message per second: " + str(message_per_second))
         for curr_message in range(0, int(message_per_second)):
             if "127.0.0.1" in ip:
