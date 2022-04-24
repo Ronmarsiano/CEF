@@ -6,7 +6,7 @@ import random
 
 
 fixed_message_p1 = "0|Palo Alto Networks"
-fixed_message_p2 = "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=NormanOsborn@contoso77.com suser=NormanOsborn.com proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack src=204.128.0.1 dst=204.128.0.1 sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="
+fixed_message_p2 = "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=NormanOsborn@contoso77.com suser=NormanOsborn.com proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack src=204.128.0.2 dst=204.128.0.1 sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="
 cisco_message = "Inbound TCP connection denied from 183.60.23.164/58098 to 131.107.193.171/23 flags SYN  on interface inet"
 
 
