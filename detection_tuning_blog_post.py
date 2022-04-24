@@ -43,6 +43,8 @@ def send_cef_message_local(port, start_millis, message_to_send, is_cef, rfc5424)
 def stream_message(ip, port, message_per_second, time_in_second, message_to_send, is_cef, rfc_5424):
     for curr_second in range(0, int(time_in_second)):
         start_millis = int(round(time.time() * 1000))
+        rand_int = random.randint(0, 1000)
+        message_to_send = message_per_second + " rand=" + rand_int
         print("Message per second: " + str(message_per_second))
         for curr_message in range(0, int(message_per_second)):
             if "127.0.0.1" in ip:
