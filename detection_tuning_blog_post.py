@@ -57,6 +57,21 @@ def stream_message(ip, port, message_per_second, time_in_second, message_to_send
             print("stream")
 
 
+def build_mesages(test_index):
+    return [
+        (fixed_message_p1 + "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=BarryAllen@contoso77.com suser=BarryAllen@contoso77.com dst=166.118.0.2 src=204.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="+ test_index),
+        (fixed_message_p1 + "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=ClarkJosephKent@contoso77.com suser=ClarkJosephKent@contoso77.com dst=166.118.0.2 src=204.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="+ test_index),
+        (fixed_message_p1 + "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=BillyBatson@contoso77.com suser=BillyBatson@contoso77.com dst=166.118.0.2 src=204.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="+ test_index),
+        (fixed_message_p1 + "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=BruceWayne@contoso77.com suser=BruceWayne@contoso77.com dst=166.118.0.2 src=204.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="+ test_index),
+        (fixed_message_p1 + "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=LexLuthor@contoso77.com suser=LexLuthor@contoso77.com dst=166.118.0.2 src=204.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="+ test_index),
+        (fixed_message_p1 + "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=EobardThawne@contoso77.com suser=EobardThawne@contoso77.com dst=166.118.0.2 src=204.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="+ test_index),
+        (fixed_message_p1 + "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=OttoOctavius@contoso77.com suser=OttoOctavius@contoso77.com dst=166.118.0.2 src=204.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="+ test_index),
+        (fixed_message_p1 + "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=NormanOsborn@contoso77.com suser=NormanOsborn@contoso77.com dst=166.118.0.2 src=204.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="+ test_index),
+        (fixed_message_p1 + "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=UlyssesKlaue@contoso77.com suser=UlyssesKlaue@contoso77.com dst=166.118.0.2 src=204.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="+ test_index),
+        (fixed_message_p1 + "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=ObadiahStane@contoso77.com suser=ObadiahStane@contoso77.com dst=166.118.0.2 src=204.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="+ test_index),
+        (fixed_message_p1 + "|PAN-OS|common=event-format-test|end|TRAFFIC|1|deviceExternalId=0001A01234 dpt=49510 suid=ErikKillmonger@contoso77.com suser=ErikKillmonger@contoso77.com dst=166.118.0.2 src=204.128.0.2  proto=TCP dvchost=PaloAltoDevice app=incomplete reason=tcp-rst-from-server act=ack sourceTranslatedAddress=211.0.17.10 destinationTranslatedAddress=3.4.6.3 testIndex="+ test_index)
+    ]
+
 def distribute_message(ip, port, amount, messages_per_second, message_to_send, is_cef):
     # time in seconds
     delta = 1000 / messages_per_second
@@ -98,10 +113,15 @@ def main():
         else:
             rfc_5424 = False
         print("rfc_5424="+str(rfc_5424))
+
+
         message_to_send = (fixed_message_p1 + fixed_message_p2+ test_index) if is_cef is True else cisco_message
         # distribute_message(ip, port, int(messages_per_second) * int(amount_of_seconds), int(messages_per_second), message_to_send)
-        stream_message(ip, port, messages_per_second, amount_of_seconds, message_to_send, is_cef=is_cef, rfc_5424=rfc_5424)
-        print("Done - " + str(int(messages_per_second) * int(amount_of_seconds)))
+        message_arr = build_mesages(test_index)
+        for ind in range(0, len(message_arr)):
+            message_to_send = message_arr[ind]
+            stream_message(ip, port, messages_per_second, amount_of_seconds, message_to_send, is_cef=is_cef, rfc_5424=rfc_5424)
+            print("Done - " + str(int(messages_per_second) * int(amount_of_seconds)))
     end_millis = int(round(time.time() * 1000))
     print("Time[seconds]: " + str((end_millis-start_millis)/1000))
 
