@@ -45,7 +45,7 @@ def stream_message(ip, port, message_per_second, time_in_second, message_to_send
         start_millis = int(round(time.time() * 1000))
         print("Message per second: " + str(message_per_second))
         for curr_message in range(0, int(message_per_second)):
-            message_arr = build_mesages(curr_message)
+            message_arr = build_mesages(str(curr_message))
             ind = random.randint(0, len(message_arr))
             message_to_send = message_arr[ind]
             if "127.0.0.1" in ip:
