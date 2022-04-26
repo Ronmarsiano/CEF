@@ -46,7 +46,7 @@ def stream_message(ip, port, message_per_second, time_in_second, message_to_send
         print("Message per second: " + str(message_per_second))
         for curr_message in range(0, int(message_per_second)):
             message_arr = build_mesages(str(curr_message))
-            ind = random.randint(0, len(message_arr))
+            ind = random.randint(0, len(message_arr)-1)
             message_to_send = message_arr[ind]
             if "127.0.0.1" in ip:
                 send_cef_message_local(port, start_millis, message_to_send, is_cef=is_cef, rfc5424=rfc_5424)
@@ -128,9 +128,9 @@ def main():
 
         message_to_send = (fixed_message_p1 + fixed_message_p2+ test_index) if is_cef is True else cisco_message
         # distribute_message(ip, port, int(messages_per_second) * int(amount_of_seconds), int(messages_per_second), message_to_send)
-        message_arr = build_mesages(test_index)
-        ind = random.randint(0, len(message_arr))
-        message_to_send = message_arr[ind]
+        # message_arr = build_mesages(test_index)
+        # ind = random.randint(0, len(message_arr))
+        # message_to_send = message_arr[ind]
         stream_message(ip, port, messages_per_second, amount_of_seconds, message_to_send, is_cef=is_cef, rfc_5424=rfc_5424)
         print("Done - " + str(int(messages_per_second) * int(amount_of_seconds)))
     end_millis = int(round(time.time() * 1000))
