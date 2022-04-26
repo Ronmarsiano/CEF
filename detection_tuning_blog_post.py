@@ -1,5 +1,4 @@
 #! /usr/local/bin/python3
-from locale import currency
 import sys
 import subprocess
 import time
@@ -128,10 +127,10 @@ def main():
 
 
         message_to_send = (fixed_message_p1 + fixed_message_p2+ test_index) if is_cef is True else cisco_message
-        # # distribute_message(ip, port, int(messages_per_second) * int(amount_of_seconds), int(messages_per_second), message_to_send)
-        # message_arr = build_mesages(test_index)
-        # ind = random.randint(0, len(message_arr))
-        # message_to_send = message_arr[ind]
+        # distribute_message(ip, port, int(messages_per_second) * int(amount_of_seconds), int(messages_per_second), message_to_send)
+        message_arr = build_mesages(test_index)
+        ind = random.randint(0, len(message_arr))
+        message_to_send = message_arr[ind]
         stream_message(ip, port, messages_per_second, amount_of_seconds, message_to_send, is_cef=is_cef, rfc_5424=rfc_5424)
         print("Done - " + str(int(messages_per_second) * int(amount_of_seconds)))
     end_millis = int(round(time.time() * 1000))
